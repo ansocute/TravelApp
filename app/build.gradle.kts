@@ -1,16 +1,21 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.google.services) // Thêm dòng này để kích hoạt Firebase
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin) // Thêm dòng này để kích hoạt Firebase
 }
 
 android {
     namespace = "com.nhom.travelapp"
-    compileSdk = 34 // Lưu ý: Thường dùng số nguyên, ví dụ 34 hoặc 35
+
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.nhom.travelapp"
         minSdk = 24
-        targetSdk = 34
+
+        // Bạn cũng nên sửa targetSdk thành 35 để đồng bộ
+        targetSdk = 35
+
         versionCode = 1
         versionName = "1.0"
 
@@ -30,6 +35,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -44,6 +52,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
