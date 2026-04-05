@@ -1,19 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.services) // Thêm dòng này để kích hoạt Firebase
 }
 
 android {
     namespace = "com.nhom.travelapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 34 // Lưu ý: Thường dùng số nguyên, ví dụ 34 hoặc 35
 
     defaultConfig {
         applicationId = "com.nhom.travelapp"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -36,6 +33,12 @@ android {
 }
 
 dependencies {
+    // --- KHU VỰC FIREBASE CHO NHÓM ---
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
+    // ---------------------------------
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
