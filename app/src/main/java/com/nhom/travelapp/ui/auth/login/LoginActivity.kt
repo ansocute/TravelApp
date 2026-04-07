@@ -1,21 +1,138 @@
 package com.nhom.travelapp.ui.auth.login
 
+import android.content.Intent
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.nhom.travelapp.R
+import com.nhom.travelapp.MainActivity
+import com.nhom.travelapp.data.session.SessionManager
+import com.nhom.travelapp.databinding.ActivityLoginBinding
+import com.nhom.travelapp.ui.auth.common.AuthState
+import com.nhom.travelapp.ui.auth.register.RegisterActivity
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityLoginBinding
+    private val viewModel: LoginViewModel by viewModels()
+    private lateinit var sessionManager: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_login)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        sessionManager = SessionManager(this)
+
+        applyBackgroundBlur()
+        loadRememberedLogin()
+        setupViews()
+        observeViewModel()
+    }
+
+    private fun applyBackgroundBlur() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            binding.ivBackground.setRenderEffect(
+                RenderEffect.createBlurEffect(
+                    20f,
+                    20f,
+                    Shader.TileMode.CLAMP
+                )
+            )
         }
+    }
+
+    private fun loadRememberedLogin() {
+        val isRememberMe = sessionManager.isRememberMeEnabled()
+        val savedEmail = sessionManager.getSavedEmail()
+
+        binding.cbRememberMe.isChecked = isRememberMe
+
+        if (isRememberMe && savedEmail.isNotEmpty()) {
+            binding.etEmail.setText(savedEmail)
+            binding.etPassword.requestFocus()
+        }
+    }
+
+    private fun setupViews() {
+        binding.btnLogin.setOnClickListener {
+            val email = binding.etEmail.text?.toString().orEmpty()
+            val password = binding.etPassword.text?.toString().orEmpty()
+            viewModel.login(email, password)
+        }
+
+        binding.tvGoToRegister.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
+        binding.tvForgotPassword.setOnClickListener {
+            Toast.makeText(this, "Chức năng quên mật khẩu sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnGoogleLater.setOnClickListener {
+            Toast.makeText(this, "Đăng nhập Google sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnFacebookLater.setOnClickListener {
+            Toast.makeText(this, "Đăng nhập Facebook sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.loginState.observe(this) { state ->
+            when (state) {
+                is AuthState.Idle -> setLoading(false)
+
+                is AuthState.Loading -> setLoading(true)
+
+                is AuthState.Success -> {
+                    setLoading(false)
+                    handleRememberMe()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    goToMain()
+                }
+
+                is AuthState.Error -> {
+                    setLoading(false)
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    viewModel.resetState()
+                }
+            }
+        }
+    }
+
+    private fun handleRememberMe() {
+        val email = binding.etEmail.text?.toString().orEmpty().trim()
+        val isRememberMe = binding.cbRememberMe.isChecked
+
+        if (isRememberMe) {
+            sessionManager.saveRememberMe(true)
+            sessionManager.saveEmail(email)
+        } else {
+            sessionManager.clearRememberedLogin()
+        }
+    }
+
+    private fun setLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.btnLogin.isEnabled = !isLoading
+        binding.etEmail.isEnabled = !isLoading
+        binding.etPassword.isEnabled = !isLoading
+        binding.cbRememberMe.isEnabled = !isLoading
+        binding.tvForgotPassword.isEnabled = !isLoading
+        binding.tvGoToRegister.isEnabled = !isLoading
+        binding.btnGoogleLater.isEnabled = !isLoading
+        binding.btnFacebookLater.isEnabled = !isLoading
+    }
+
+    private fun goToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 }
