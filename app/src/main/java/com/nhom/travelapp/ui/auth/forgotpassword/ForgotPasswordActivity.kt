@@ -10,8 +10,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.nhom.travelapp.databinding.ActivityForgotPasswordBinding
-import com.nhom.travelapp.ui.auth.common.AuthState
-import com.nhom.travelapp.ui.auth.login.LoginActivity
+import com.nhom.travelapp.core.utils.Resource
 
 class ForgotPasswordActivity : AppCompatActivity() {
 
@@ -54,21 +53,21 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.resetPasswordState.observe(this) { state ->
             when (state) {
-                is AuthState.Idle -> setLoading(false)
+                is Resource.Idle -> setLoading(false)
 
-                is AuthState.Loading -> setLoading(true)
+                is Resource.Loading -> setLoading(true)
 
-                is AuthState.Success -> {
+                is Resource.Success -> {
                     setLoading(false)
-                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
-
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    startActivity(intent)
+                    Toast.makeText(
+                        this,
+                        state.message ?: "Đã gửi email đặt lại mật khẩu",
+                        Toast.LENGTH_LONG
+                    ).show()
                     finish()
                 }
 
-                is AuthState.Error -> {
+                is Resource.Error -> {
                     setLoading(false)
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()

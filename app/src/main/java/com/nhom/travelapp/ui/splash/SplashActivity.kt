@@ -4,13 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.nhom.travelapp.MainActivity
-import com.nhom.travelapp.core.firebase.FirebaseProvider
+import com.nhom.travelapp.data.repository.AuthRepository
 import com.nhom.travelapp.databinding.ActivitySplashBinding
 import com.nhom.travelapp.ui.auth.login.LoginActivity
 
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
+    private val authRepository = AuthRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,9 +22,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkUserSession() {
-        val currentUser = FirebaseProvider.auth.currentUser
-
-        if (currentUser != null) {
+        if (authRepository.getCurrentUser() != null) {
             goToMain()
         } else {
             goToLogin()

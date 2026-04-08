@@ -11,7 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.nhom.travelapp.MainActivity
 import com.nhom.travelapp.databinding.ActivityRegisterBinding
-import com.nhom.travelapp.ui.auth.common.AuthState
+import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.ui.auth.login.LoginActivity
 
 class RegisterActivity : AppCompatActivity() {
@@ -47,8 +47,15 @@ class RegisterActivity : AppCompatActivity() {
             val email = binding.etEmail.text?.toString().orEmpty()
             val password = binding.etPassword.text?.toString().orEmpty()
             val confirmPassword = binding.etConfirmPassword.text?.toString().orEmpty()
+            val allowLocationAccess = binding.switchLocationAccess.isChecked
 
-            viewModel.register(fullName, email, password, confirmPassword)
+            viewModel.register(
+                fullName = fullName,
+                email = email,
+                password = password,
+                confirmPassword = confirmPassword,
+                allowLocationAccess = allowLocationAccess
+            )
         }
 
         binding.tvGoToLogin.setOnClickListener {
@@ -78,17 +85,21 @@ class RegisterActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.registerState.observe(this) { state ->
             when (state) {
-                is AuthState.Idle -> setLoading(false)
+                is Resource.Idle -> setLoading(false)
 
-                is AuthState.Loading -> setLoading(true)
+                is Resource.Loading -> setLoading(true)
 
-                is AuthState.Success -> {
+                is Resource.Success -> {
                     setLoading(false)
-                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        state.message ?: "Đăng ký thành công",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     goToMain()
                 }
 
-                is AuthState.Error -> {
+                is Resource.Error -> {
                     setLoading(false)
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()

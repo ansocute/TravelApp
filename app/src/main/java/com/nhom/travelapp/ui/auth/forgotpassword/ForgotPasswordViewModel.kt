@@ -1,45 +1,35 @@
 package com.nhom.travelapp.ui.auth.forgotpassword
 
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.nhom.travelapp.core.firebase.FirebaseProvider
-import com.nhom.travelapp.ui.auth.common.AuthState
+import androidx.lifecycle.viewModelScope
+import com.nhom.travelapp.core.utils.Resource
+import com.nhom.travelapp.core.utils.Validator
+import com.nhom.travelapp.data.repository.AuthRepository
+import kotlinx.coroutines.launch
 
-class ForgotPasswordViewModel : ViewModel() {
+class ForgotPasswordViewModel(
+    private val authRepository: AuthRepository = AuthRepository()
+) : ViewModel() {
 
-    private val _resetPasswordState = MutableLiveData<AuthState>(AuthState.Idle)
-    val resetPasswordState: LiveData<AuthState> = _resetPasswordState
+    private val _resetPasswordState = MutableLiveData<Resource<Unit>>(Resource.Idle)
+    val resetPasswordState: LiveData<Resource<Unit>> = _resetPasswordState
 
     fun sendResetPasswordEmail(email: String) {
-        val emailTrimmed = email.trim()
-
-        if (emailTrimmed.isEmpty()) {
-            _resetPasswordState.value = AuthState.Error("Vui lòng nhập email")
+        val validationError = Validator.validateResetPassword(email)
+        if (validationError != null) {
+            _resetPasswordState.value = Resource.Error(validationError)
             return
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(emailTrimmed).matches()) {
-            _resetPasswordState.value = AuthState.Error("Email không hợp lệ")
-            return
+        viewModelScope.launch {
+            _resetPasswordState.value = Resource.Loading
+            _resetPasswordState.value = authRepository.sendPasswordResetEmail(email.trim())
         }
-
-        _resetPasswordState.value = AuthState.Loading
-
-        FirebaseProvider.auth.sendPasswordResetEmail(emailTrimmed)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _resetPasswordState.value =
-                        AuthState.Success("Đã gửi email đặt lại mật khẩu")
-                } else {
-                    _resetPasswordState.value =
-                        AuthState.Error(task.exception?.message ?: "Không gửi được email đặt lại mật khẩu")
-                }
-            }
     }
 
     fun resetState() {
-        _resetPasswordState.value = AuthState.Idle
+        _resetPasswordState.value = Resource.Idle
     }
 }
