@@ -14,6 +14,7 @@ import com.nhom.travelapp.data.session.SessionManager
 import com.nhom.travelapp.databinding.ActivityLoginBinding
 import com.nhom.travelapp.ui.auth.common.AuthState
 import com.nhom.travelapp.ui.auth.register.RegisterActivity
+import com.nhom.travelapp.ui.auth.forgotpassword.ForgotPasswordActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -70,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.tvForgotPassword.setOnClickListener {
-            Toast.makeText(this, "Chức năng quên mật khẩu sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
 
         binding.btnGoogleLater.setOnClickListener {

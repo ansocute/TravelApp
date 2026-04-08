@@ -1,6 +1,9 @@
 package com.nhom.travelapp.ui.auth.register
 
 import android.content.Intent
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -21,16 +24,29 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        applyBackgroundBlur()
         setupViews()
         observeViewModel()
     }
 
+    private fun applyBackgroundBlur() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            binding.ivBackground.setRenderEffect(
+                RenderEffect.createBlurEffect(
+                    20f,
+                    20f,
+                    Shader.TileMode.CLAMP
+                )
+            )
+        }
+    }
+
     private fun setupViews() {
         binding.btnRegister.setOnClickListener {
-            val fullName = binding.etFullName.text.toString()
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
-            val confirmPassword = binding.etConfirmPassword.text.toString()
+            val fullName = binding.etFullName.text?.toString().orEmpty()
+            val email = binding.etEmail.text?.toString().orEmpty()
+            val password = binding.etPassword.text?.toString().orEmpty()
+            val confirmPassword = binding.etConfirmPassword.text?.toString().orEmpty()
 
             viewModel.register(fullName, email, password, confirmPassword)
         }
@@ -39,18 +55,32 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+
+        binding.btnGoogleLater.setOnClickListener {
+            Toast.makeText(this, "Đăng ký bằng Google sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnFacebookLater.setOnClickListener {
+            Toast.makeText(this, "Đăng ký bằng Facebook sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.switchLocationAccess.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                Toast.makeText(
+                    this,
+                    "Tùy chọn vị trí đã bật. Phần xin quyền sẽ tích hợp sau.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun observeViewModel() {
         viewModel.registerState.observe(this) { state ->
             when (state) {
-                is AuthState.Idle -> {
-                    setLoading(false)
-                }
+                is AuthState.Idle -> setLoading(false)
 
-                is AuthState.Loading -> {
-                    setLoading(true)
-                }
+                is AuthState.Loading -> setLoading(true)
 
                 is AuthState.Success -> {
                     setLoading(false)
@@ -69,12 +99,16 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+
         binding.btnRegister.isEnabled = !isLoading
         binding.etFullName.isEnabled = !isLoading
         binding.etEmail.isEnabled = !isLoading
         binding.etPassword.isEnabled = !isLoading
         binding.etConfirmPassword.isEnabled = !isLoading
+        binding.switchLocationAccess.isEnabled = !isLoading
         binding.tvGoToLogin.isEnabled = !isLoading
+        binding.btnGoogleLater.isEnabled = !isLoading
+        binding.btnFacebookLater.isEnabled = !isLoading
     }
 
     private fun goToMain() {
