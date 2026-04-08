@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin) // Thêm dòng này để kích hoạt Firebase
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin) // Dùng cho Maps API key / secrets
 }
 
 android {
@@ -12,14 +12,12 @@ android {
     defaultConfig {
         applicationId = "com.nhom.travelapp"
         minSdk = 24
-
-        // Bạn cũng nên sửa targetSdk thành 35 để đồng bộ
         targetSdk = 35
-
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["MAPS_API_KEY"] = "MAPS_API_KEY"
     }
 
     buildTypes {
@@ -46,6 +44,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     // ---------------------------------
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
