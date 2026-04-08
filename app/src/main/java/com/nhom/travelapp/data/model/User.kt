@@ -6,5 +6,6 @@ data class User(
     val email: String = "",
     val phone: String = "",
     val avatarUrl: String = "",
-    val createdAt: Long = 0L
+    val createdAt: Long = 0L,
+    val allowLocationAccess: Boolean = false
 )

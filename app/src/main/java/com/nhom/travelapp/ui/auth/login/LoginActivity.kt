@@ -8,11 +8,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.nhom.travelapp.core.utils.Resource
 import androidx.appcompat.app.AppCompatActivity
 import com.nhom.travelapp.MainActivity
 import com.nhom.travelapp.data.session.SessionManager
 import com.nhom.travelapp.databinding.ActivityLoginBinding
-import com.nhom.travelapp.ui.auth.common.AuthState
 import com.nhom.travelapp.ui.auth.register.RegisterActivity
 import com.nhom.travelapp.ui.auth.forgotpassword.ForgotPasswordActivity
 
@@ -86,18 +86,22 @@ class LoginActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.loginState.observe(this) { state ->
             when (state) {
-                is AuthState.Idle -> setLoading(false)
+                is Resource.Idle -> setLoading(false)
 
-                is AuthState.Loading -> setLoading(true)
+                is Resource.Loading -> setLoading(true)
 
-                is AuthState.Success -> {
+                is Resource.Success -> {
                     setLoading(false)
                     handleRememberMe()
-                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        state.message ?: "Đăng nhập thành công",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     goToMain()
                 }
 
-                is AuthState.Error -> {
+                is Resource.Error -> {
                     setLoading(false)
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()
