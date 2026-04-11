@@ -15,14 +15,17 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.nhom.travelapp.R
 import com.nhom.travelapp.databinding.ActivityMapsBinding
+import com.nhom.travelapp.services.LocationService
 import com.nhom.travelapp.ui.auth.login.LoginActivity
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+    private lateinit var locationService: LocationService
     private lateinit var binding: ActivityMapsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        locationService = LocationService(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
@@ -44,30 +47,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // 1. Tọa độ TP.HCM
-        val hcmc = LatLng(10.762622, 106.660172)
-        mMap.addMarker(MarkerOptions().position(hcmc).title("Chào mừng đến với TP.HCM"))
-
-        // 2. Zoom vào bản đồ (mức 15f là nhìn rõ đường phố)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmc, 15f))
-
-        // 3. Kiểm tra quyền và hiện nút định vị
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            mMap.isMyLocationEnabled = true
-        } else {
-            // Nếu chưa có quyền, yêu cầu người dùng cấp quyền (Dành cho Android 6.0+)
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                1
-            )
-        }
+        locationService.getCurrentLocation(
+            onSuccess = { lat, lng ->
+                val myLocation = LatLng(lat, lng)
+                // Thêm Marker tại vị trí của An
+                mMap.addMarker(MarkerOptions().position(myLocation).title("Vị trí của tôi"))
+                // Phóng to bản đồ vào vị trí đó (độ zoom 15f là vừa đẹp)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
+            },
+            onFailure = {
+                // Nếu không lấy được vị trí, mặc định hiện ở TP.HCM
+                val hcm = LatLng(10.762622, 106.660172)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcm, 10f))
+            }
+        )
     }
 }

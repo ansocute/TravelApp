@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.gms:play-services-location:21.2.0")
     // --- KHU VỰC FIREBASE CHO NHÓM ---
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-database-ktx")
