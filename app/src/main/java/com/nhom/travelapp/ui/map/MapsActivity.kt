@@ -1,8 +1,10 @@
-package com.nhom.travelapp
+package com.nhom.travelapp.ui.map
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -11,7 +13,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.nhom.travelapp.R
 import com.nhom.travelapp.databinding.ActivityMapsBinding
+import com.nhom.travelapp.ui.auth.login.LoginActivity
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -27,6 +31,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        val btnLogout = findViewById<Button>(R.id.btnLogout)
+        btnLogout.setOnClickListener {
+            // Code đăng xuất quay về LoginActivity như mình đã hướng dẫn
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
