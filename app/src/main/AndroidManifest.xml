@@ -17,9 +17,11 @@
         android:theme="@style/Theme.TravelApp">
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.TravelApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -34,8 +36,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.auth.login.LoginActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -44,8 +45,7 @@
         <activity
             android:name=".MapsActivity"
             android:exported="true"
-            android:label="@string/title_activity_maps">
-        </activity>
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />
