@@ -11,8 +11,8 @@
 | **An (Leader)** | Maps & Location | `ui.map` & `services.LocationService` | Bản đồ hiện vị trí người dùng và các Marker địa điểm. |
 | **Tùng** | Authentication | `ui.auth` & `services.AuthService` | Màn hình Đăng nhập, Đăng ký (Firebase hoặc API). |
 | **Đức** | Discovery | `ui.discovery` & `data.repository` | Danh sách địa điểm (RecyclerView), thanh tìm kiếm và bộ lọc. |
-| **Cương** | Planner | `ui.planner` & `data.local (Room)` | Lưu lịch trình chuyến đi vào máy, hiển thị danh sách ngày đi. |
-| **Huy** | Details | `ui.details` | Trang chi tiết địa điểm (Ảnh, mô tả, đánh giá, bình luận). |
+| **Huy** | Planner | `ui.planner` & `data.local (Room)` | Lưu lịch trình chuyến đi vào máy, hiển thị danh sách ngày đi. |
+| **Cương** | Details | `ui.details` | Trang chi tiết địa điểm (Ảnh, mô tả, đánh giá, bình luận). |
 
 ---
 
