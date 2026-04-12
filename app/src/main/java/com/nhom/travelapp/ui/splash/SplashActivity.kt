@@ -30,7 +30,8 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun goToMain() {
-        val intent = Intent(this, MainActivity::class.java)
+        // Thay đổi MainActivity thành MapsActivity
+        val intent = Intent(this, com.nhom.travelapp.ui.map.MapsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
