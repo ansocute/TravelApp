@@ -54,25 +54,47 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        // 1. Vừa vào là cắm các Marker địa điểm du lịch ngay
+        addTravelMarkers()
+
+        // 2. Sau đó mới kiểm tra quyền để hiện vị trí của An
         checkPermissionAndGetLocation()
+    }
+
+    private fun addTravelMarkers() {
+        // Danh sách các địa điểm tiêu biểu (An có thể thêm bớt tọa độ tùy ý)
+        val locations = listOf(
+            LatLng(10.7769, 106.7009) to "Dinh Độc Lập",
+            LatLng(10.7798, 106.6990) to "Nhà thờ Đức Bà",
+            LatLng(10.7725, 106.6980) to "Chợ Bến Thành",
+            LatLng(10.7750, 106.7068) to "Bitexco Financial Tower",
+            LatLng(10.7543, 106.6639) to "Sân vận động Thống Nhất" // Thêm địa danh An thích nè
+        )
+
+        for (location in locations) {
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(location.first)
+                    .title(location.second)
+                    .snippet("Điểm đến hấp dẫn trong chuyến đi")
+            )
+        }
     }
 
     private fun checkPermissionAndGetLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Nếu chưa có quyền, hiện bảng hỏi xin quyền
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         } else {
-            // Đã có quyền, lấy vị trí luôn
             getUserLocation()
         }
     }
 
     private fun getUserLocation() {
-        // Hiện chấm xanh vị trí của Google (nếu có quyền)
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.isMyLocationEnabled = true
         }
@@ -80,8 +102,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         locationService.getCurrentLocation(
             onSuccess = { lat, lng ->
                 val myLocation = LatLng(lat, lng)
-                mMap.clear() // Xóa marker cũ nếu có
-                mMap.addMarker(MarkerOptions().position(myLocation).title("Vị trí của bạn"))
+
+                // KHÔNG dùng mMap.clear() ở đây để giữ lại các Marker du lịch
+
+                mMap.addMarker(MarkerOptions()
+                    .position(myLocation)
+                    .title("Vị trí của bạn")
+                    // Có thể đổi màu Marker này để phân biệt với điểm du lịch
+                    .icon(com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_AZURE))
+                )
+
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
             },
             onFailure = {
