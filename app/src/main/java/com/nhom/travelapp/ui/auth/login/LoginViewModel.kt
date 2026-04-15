@@ -30,6 +30,13 @@ class LoginViewModel(
         }
     }
 
+    fun loginWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _loginState.value = Resource.Loading
+            _loginState.value = authRepository.loginWithGoogle(idToken)
+        }
+    }
+
     fun resetState() {
         _loginState.value = Resource.Idle
     }
