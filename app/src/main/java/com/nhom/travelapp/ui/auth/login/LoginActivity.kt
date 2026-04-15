@@ -77,10 +77,6 @@ class LoginActivity : AppCompatActivity() {
         binding.btnGoogleLater.setOnClickListener {
             Toast.makeText(this, "Đăng nhập Google sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
         }
-
-        binding.btnFacebookLater.setOnClickListener {
-            Toast.makeText(this, "Đăng nhập Facebook sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun observeViewModel() {
@@ -131,7 +127,6 @@ class LoginActivity : AppCompatActivity() {
         binding.tvForgotPassword.isEnabled = !isLoading
         binding.tvGoToRegister.isEnabled = !isLoading
         binding.btnGoogleLater.isEnabled = !isLoading
-        binding.btnFacebookLater.isEnabled = !isLoading
     }
 
     private fun goToMain() {
