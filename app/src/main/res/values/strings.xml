@@ -29,5 +29,11 @@
     <string name="or_register_with">HOẶC ĐĂNG KÝ BẰNG</string>
     <string name="prompt_existing_user">Bạn đã có tài khoản?</string>
     <string name="footer_copyright">© 2026 TravelApp. All rights reserved.</string>
+
+    //Quên mật khẩu
+    <string name="forgot_password_title">Quên mật khẩu</string>
+    <string name="forgot_password_subtitle">Nhập email để nhận liên kết\nđặt lại mật khẩu</string>
+    <string name="action_send_reset_email">Gửi email đặt lại mật khẩu</string>
+    <string name="action_back_to_login">Quay lại đăng nhập</string>
 </resources>
 
