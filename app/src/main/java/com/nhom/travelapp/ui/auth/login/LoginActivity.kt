@@ -9,11 +9,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.nhom.travelapp.MainActivity
 import com.nhom.travelapp.core.utils.Resource
+import com.nhom.travelapp.data.model.Place
 import com.nhom.travelapp.data.session.SessionManager
 import com.nhom.travelapp.databinding.ActivityLoginBinding
 import com.nhom.travelapp.ui.auth.forgotpassword.ForgotPasswordActivity
 import com.nhom.travelapp.ui.auth.register.RegisterActivity
+import com.nhom.travelapp.ui.details.DetailActivity
 import com.nhom.travelapp.ui.map.MapsActivity
 
 class LoginActivity : AppCompatActivity() {
@@ -136,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToMain() {
         // Thay đổi MainActivity thành MapsActivity của An
-        val intent = Intent(this, MapsActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
 
         // Cờ này giúp xóa sạch các Activity cũ (như Login) khỏi hàng chờ
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
