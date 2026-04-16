@@ -9,7 +9,7 @@
         android:id="@+id/ivBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="Background"
+        android:contentDescription="@string/content_desc_background"
         android:scaleType="centerCrop"
         android:src="@drawable/bg_login_travel"
         tools:ignore="ContentDescription" />
@@ -27,7 +27,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="24dp">
@@ -63,7 +63,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:contentDescription="Logo"
+                            android:contentDescription="@string/content_desc_logo"
                             android:src="@mipmap/ic_launcher_round"
                             tools:ignore="ContentDescription" />
                     </FrameLayout>
@@ -73,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
-                        android:text="Bắt đầu hành trình"
+                        android:text="@string/register_title_journey"
                         android:textAlignment="center"
                         android:textColor="#1580FF"
                         android:textSize="30sp"
@@ -86,7 +86,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="24dp"
                         android:gravity="center"
-                        android:text="Khám phá thế giới theo cách riêng&#10;của bạn"
+                        android:text="@string/register_subtitle_discover"
                         android:textColor="#8A8FA6"
                         android:textSize="15sp" />
 
@@ -95,7 +95,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Họ và tên"
+                        android:hint="@string/hint_full_name"
                         app:boxBackgroundColor="#F5F2FF"
                         app:boxCornerRadiusBottomEnd="28dp"
                         app:boxCornerRadiusBottomStart="28dp"
@@ -123,7 +123,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:hint="Địa chỉ Email"
+                        android:hint="@string/hint_email"
                         app:boxBackgroundColor="#F5F2FF"
                         app:boxCornerRadiusBottomEnd="28dp"
                         app:boxCornerRadiusBottomStart="28dp"
@@ -151,7 +151,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:hint="Mật khẩu"
+                        android:hint="@string/hint_password"
                         app:boxBackgroundColor="#F5F2FF"
                         app:boxCornerRadiusBottomEnd="28dp"
                         app:boxCornerRadiusBottomStart="28dp"
@@ -180,7 +180,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:hint="Xác nhận"
+                        android:hint="@string/hint_confirm_password"
                         app:boxBackgroundColor="#F5F2FF"
                         app:boxCornerRadiusBottomEnd="28dp"
                         app:boxCornerRadiusBottomStart="28dp"
@@ -220,7 +220,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:contentDescription="Location"
+                            android:contentDescription="@string/content_desc_location"
                             android:src="@android:drawable/ic_menu_mylocation"
                             app:tint="#1580FF"
                             tools:ignore="ContentDescription" />
@@ -230,7 +230,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:text="Cho phép truy cập vị trí"
+                            android:text="@string/action_allow_location"
                             android:textColor="#3A3A52"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -247,7 +247,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="58dp"
                         android:layout_marginTop="18dp"
-                        android:text="Đăng Ký Ngay"
+                        android:text="@string/action_register"
                         android:textAllCaps="false"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -266,7 +266,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="26dp"
-                        android:text="HOẶC ĐĂNG KÝ BẰNG"
+                        android:text="@string/or_register_with"
                         android:textColor="#98A2B3"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -275,8 +275,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnGoogleLater"
@@ -285,25 +285,11 @@
                             android:layout_height="52dp"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:text="Google"
+                            android:text="@string/action_google"
                             android:textAllCaps="false"
-                            android:textColor="#3A3A52"
+                            android:textColor="#FFFFFF"
                             android:textStyle="bold"
-                            app:cornerRadius="26dp"
-                            app:strokeColor="#D9DCE8"
-                            app:strokeWidth="1dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnFacebookLater"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="52dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:text="Facebook"
-                            android:textAllCaps="false"
-                            android:textColor="#3A3A52"
-                            android:textStyle="bold"
+                            app:backgroundTint="#4285F4"
                             app:cornerRadius="26dp"
                             app:strokeColor="#D9DCE8"
                             app:strokeWidth="1dp" />
@@ -320,7 +306,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bạn đã có tài khoản?"
+                            android:text="@string/prompt_existing_user"
                             android:textColor="#6B7280"
                             android:textSize="14sp" />
 
@@ -329,7 +315,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="Đăng nhập"
+                            android:text="@string/action_login"
                             android:textColor="#1580FF"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -344,7 +330,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="© 2024 TravelApp. All rights reserved."
+                android:text="@string/footer_copyright"
                 android:textColor="#B8C0D9"
                 android:textSize="12sp" />
 

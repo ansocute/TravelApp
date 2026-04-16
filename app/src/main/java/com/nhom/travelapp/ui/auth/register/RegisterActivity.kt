@@ -67,9 +67,6 @@ class RegisterActivity : AppCompatActivity() {
             Toast.makeText(this, "Đăng ký bằng Google sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
         }
 
-        binding.btnFacebookLater.setOnClickListener {
-            Toast.makeText(this, "Đăng ký bằng Facebook sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
-        }
 
         binding.switchLocationAccess.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -119,7 +116,6 @@ class RegisterActivity : AppCompatActivity() {
         binding.switchLocationAccess.isEnabled = !isLoading
         binding.tvGoToLogin.isEnabled = !isLoading
         binding.btnGoogleLater.isEnabled = !isLoading
-        binding.btnFacebookLater.isEnabled = !isLoading
     }
 
     private fun goToMain() {

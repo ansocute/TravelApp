@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nhom.travelapp.core.utils.Resource
-import com.nhom.travelapp.databinding.ActivityFragmentDiscoveryBinding // Khớp với tên file XML của Đức
+import com.nhom.travelapp.databinding.ActivityFragmentDiscoveryBinding
 import com.nhom.travelapp.ui.adapter.PlaceAdapter
 
 class DiscoveryFragment : Fragment() {

@@ -13,7 +13,20 @@
           "package_name": "com.nhom.travelapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "810435987815-l8f54mvcjc37djlt43uv6r2nn62kl1rf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nhom.travelapp",
+            "certificate_hash": "1655dcc5036a4b77b3a70b38546011b2ac15f643"
+          }
+        },
+        {
+          "client_id": "810435987815-mvf08tclnn9l92a28j5g0ivvdqbi0n7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD9x_X0rT9GzKRiWtBfvAngQCDL9kmfyYE"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810435987815-mvf08tclnn9l92a28j5g0ivvdqbi0n7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

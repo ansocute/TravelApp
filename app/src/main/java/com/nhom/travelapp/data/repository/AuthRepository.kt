@@ -77,6 +77,40 @@ class AuthRepository(
         }
     }
 
+    suspend fun loginWithGoogle(idToken: String): Resource<User> {
+        return try {
+            // Xác thực với Firebase Auth
+            val firebaseUser = authRemoteDataSource.loginWithGoogle(idToken)
+
+            // Kiểm tra xem user này đã có profile trong Database chưa
+            var profile = userRemoteDataSource.getUserProfile(firebaseUser.uid)
+
+            // Nếu chưa có (đăng nhập lần đầu), tạo profile mới
+            if (profile == null) {
+                profile = User(
+                    uid = firebaseUser.uid,
+                    fullName = firebaseUser.displayName ?: "Người dùng Google",
+                    email = firebaseUser.email ?: "",
+                    phone = firebaseUser.phoneNumber ?: "",
+                    avatarUrl = firebaseUser.photoUrl?.toString() ?: "",
+                    createdAt = System.currentTimeMillis(),
+                    allowLocationAccess = false
+                )
+                userRemoteDataSource.createUserProfile(profile)
+            }
+
+            Resource.Success(
+                data = profile,
+                message = "Đăng nhập Google thành công"
+            )
+        } catch (e: Exception) {
+            Resource.Error(
+                message = e.localizedMessage ?: "Đăng nhập Google thất bại",
+                throwable = e
+            )
+        }
+    }
+
     fun getCurrentUser(): FirebaseUser? {
         return authRemoteDataSource.getCurrentUser()
     }

@@ -1,5 +1,12 @@
 package com.nhom.travelapp.ui.auth.login
 
+import android.app.Activity
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.nhom.travelapp.R
 import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
@@ -21,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var sessionManager: SessionManager
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +41,7 @@ class LoginActivity : AppCompatActivity() {
         loadRememberedLogin()
         setupViews()
         observeViewModel()
+        setupGoogleSignIn()
     }
 
     private fun applyBackgroundBlur() {
@@ -74,12 +83,11 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
 
+        // Cập nhật lại sự kiện cho nút Google
         binding.btnGoogleLater.setOnClickListener {
-            Toast.makeText(this, "Đăng nhập Google sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.btnFacebookLater.setOnClickListener {
-            Toast.makeText(this, "Đăng nhập Facebook sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+            setLoading(true)
+            val signInIntent = googleSignInClient.signInIntent
+            googleSignInLauncher.launch(signInIntent)
         }
     }
 
@@ -131,7 +139,6 @@ class LoginActivity : AppCompatActivity() {
         binding.tvForgotPassword.isEnabled = !isLoading
         binding.tvGoToRegister.isEnabled = !isLoading
         binding.btnGoogleLater.isEnabled = !isLoading
-        binding.btnFacebookLater.isEnabled = !isLoading
     }
 
     private fun goToMain() {
@@ -143,4 +150,31 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+    private fun setupGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    // Bộ lắng nghe kết quả trả về từ màn hình chọn tài khoản Google
+    private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.idToken?.let { idToken ->
+                    viewModel.loginWithGoogle(idToken)
+                }
+            } catch (e: ApiException) {
+                setLoading(false)
+                Toast.makeText(this, "Lỗi kết nối Google: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            setLoading(false)
+        }
+    }
+
 }

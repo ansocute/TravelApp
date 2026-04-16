@@ -17,7 +17,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders["MAPS_API_KEY"] = "MAPS_API_KEY"
+        manifestPlaceholders["MAPS_API_KEY"] = "AIzaSyCwWG45OxI0AZ04KqfjW_Ei45r237VbhXE"
     }
 
     buildTypes {
@@ -44,7 +44,15 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Thư viện để gọi popup đăng nhập Google
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
     // ---------------------------------
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("com.google.firebase:firebase-firestore")
+
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
