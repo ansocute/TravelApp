@@ -16,11 +16,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.nhom.travelapp.MainActivity
 import com.nhom.travelapp.core.utils.Resource
+import com.nhom.travelapp.data.model.Place
 import com.nhom.travelapp.data.session.SessionManager
 import com.nhom.travelapp.databinding.ActivityLoginBinding
 import com.nhom.travelapp.ui.auth.forgotpassword.ForgotPasswordActivity
 import com.nhom.travelapp.ui.auth.register.RegisterActivity
+import com.nhom.travelapp.ui.details.DetailActivity
+import com.nhom.travelapp.ui.discovery.DiscoveryFragment
 import com.nhom.travelapp.ui.map.MapsActivity
 
 class LoginActivity : AppCompatActivity() {
