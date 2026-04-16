@@ -35,5 +35,8 @@
     <string name="forgot_password_subtitle">Nhập email để nhận liên kết\nđặt lại mật khẩu</string>
     <string name="action_send_reset_email">Gửi email đặt lại mật khẩu</string>
     <string name="action_back_to_login">Quay lại đăng nhập</string>
+
+
+    <string name="place_rating">%1$f</string>
 </resources>
 
