@@ -9,6 +9,7 @@ data class Place(
     val address: String = "",
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
+    val location: String = "",
     val category: String = "", // Ví dụ: "Ăn uống", "Tham quan", "Khách sạn"
     val rating: Float = 0f,
     val imageUrl: String = "", // Link ảnh từ Internet
