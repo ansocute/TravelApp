@@ -36,12 +36,12 @@ Fragments: Tách biệt logic từng màn hình (Explore, Map, Planner, Profile)
 ViewBinding: Tương tác với UI an toàn, tránh lỗi Null Pointer Exception.
 
 👥 Phân công nhiệm vụ (Package Structure)
-Thành viên,Nhiệm vụ chính,Package
-An (Leader),Core & Map,"ui.map, MainActivity, LocationService"
-Tùng,Auth,"ui.auth, AuthRepository"
-Đức,Discovery,"ui.discovery, adapter, data.model"
-Huy,Planner,"ui.planner, data.local.db"
-Cường,Details,"ui.details, ui.review"
+Thành viên,Nhiệm vụ chính,Chi tiết công việc,Trạng thái
+An (Leader),Core & Maps,- [x] Khởi tạo Single Activity & Bottom Navigation- [x] Tích hợp Maps SDK & Silver Theme- [x] Xử lý Location Service & Marker,🟢 Hoàn thành
+Tùng,Authentication,- [ ] Giao diện Login/Register- [ ] Kết nối Firebase Auth/API- [ ] Quản lý User Session,🟡 Đang làm
+Đức,Discovery,- [ ] RecyclerView danh sách địa điểm- [ ] SearchBar & Filter logic- [ ] Fetch data từ Repository,🟡 Đang làm
+Huy,Planner,- [ ] Thiết kế Database (Room)- [ ] Tính năng thêm/xóa lịch trình- [ ] Hiển thị danh sách chuyến đi,🟡 Đang làm
+Cường,Details,- [ ] Layout chi tiết địa điểm- [ ] Xử lý Image Slider & Reviews- [ ] Tính năng chia sẻ/yêu thích,🟡 Đang làm
 
 ⚙️ Cài đặt & Sử dụng
 Clone dự án.
