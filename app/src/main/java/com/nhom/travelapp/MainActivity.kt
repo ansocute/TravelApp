@@ -1,43 +1,60 @@
 package com.nhom.travelapp
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.nhom.travelapp.core.firebase.FirebaseProvider
+import androidx.fragment.app.Fragment
 import com.nhom.travelapp.databinding.ActivityMainBinding
-import com.nhom.travelapp.ui.auth.login.LoginActivity
-import com.nhom.travelapp.data.repository.AuthRepository
+import com.nhom.travelapp.ui.map.MapsFragment // Lưu ý: An sẽ cần chuyển MapsActivity thành MapsFragment
+// Import thêm các Fragment của các bạn khác khi xong:
+// import com.nhom.travelapp.ui.discovery.DiscoveryFragment
+// import com.nhom.travelapp.ui.planner.PlannerFragment
+// import com.nhom.travelapp.ui.profile.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val authRepository = AuthRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupViews()
+        // 1. Mặc định khi mở App sẽ hiện trang Explore (Discovery) của Đức/Tùng
+        // Hiện tại mình tạm để hiện trang Map của An nhé
+        replaceFragment(MapsFragment())
+
+        // 2. Thiết lập sự kiện click cho Bottom Navigation
+        setupNavigation()
     }
 
-    private fun setupViews() {
-        val currentUser = FirebaseProvider.auth.currentUser
-        val email = currentUser?.email ?: "Người dùng"
-
-        binding.tvWelcome.text = "Xin chào, $email"
-
-        binding.btnLogout.setOnClickListener {
-            logout()
+    private fun setupNavigation() {
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_explore -> {
+                    // replaceFragment(DiscoveryFragment())
+                    true
+                }
+                R.id.nav_map -> {
+                    replaceFragment(MapsFragment())
+                    true
+                }
+                R.id.nav_planner -> {
+                    // replaceFragment(PlannerFragment())
+                    true
+                }
+                R.id.nav_profile -> {
+                    // replaceFragment(ProfileFragment())
+                    true
+                }
+                else -> false
+            }
         }
     }
 
-    private fun logout() {
-        authRepository.logout()
-
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
+        fragmentTransaction.commit()
     }
 }

@@ -39,6 +39,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -64,6 +65,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    // Thư viện hỗ trợ ảnh bo góc và load ảnh nhanh cho Marker
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Thư viện hỗ trợ bo góc CardView nâng cao (nếu cần)
+    implementation("androidx.cardview:cardview:1.0.0")
 
 
     implementation(libs.androidx.core.ktx)
@@ -79,4 +85,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
 }

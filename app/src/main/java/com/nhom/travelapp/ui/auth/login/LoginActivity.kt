@@ -25,7 +25,7 @@ import com.nhom.travelapp.ui.auth.forgotpassword.ForgotPasswordActivity
 import com.nhom.travelapp.ui.auth.register.RegisterActivity
 import com.nhom.travelapp.ui.details.DetailActivity
 import com.nhom.travelapp.ui.discovery.DiscoveryFragment
-import com.nhom.travelapp.ui.map.MapsActivity
+import com.nhom.travelapp.ui.map.MapsFragment
 
 class LoginActivity : AppCompatActivity() {
 
@@ -147,7 +147,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToMain() {
         // Thay đổi MainActivity thành MapsActivity của An
-        val intent = Intent(this, MapsActivity::class.java)
+        val intent = Intent(this, MapsFragment::class.java)
 
         // Cờ này giúp xóa sạch các Activity cũ (như Login) khỏi hàng chờ
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
