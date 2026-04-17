@@ -35,7 +35,13 @@ Fragments: Tách biệt logic từng màn hình (Explore, Map, Planner, Profile)
 
 ViewBinding: Tương tác với UI an toàn, tránh lỗi Null Pointer Exception.
 
-👥 Phân công nhiệm vụ (Package Structure)Thành viênNhiệm vụ chínhPackageAn (Leader)Core & Mapui.map, MainActivity, LocationServiceTùngAuthui.auth, AuthRepositoryĐứcDiscoveryui.discovery, adapter, data.modelHuyPlannerui.planner, data.local.dbCườngDetailsui.details, ui.review
+👥 Phân công nhiệm vụ (Package Structure)
+Thành viên,Nhiệm vụ chính,Package
+An (Leader),Core & Map,"ui.map, MainActivity, LocationService"
+Tùng,Auth,"ui.auth, AuthRepository"
+Đức,Discovery,"ui.discovery, adapter, data.model"
+Huy,Planner,"ui.planner, data.local.db"
+Cường,Details,"ui.details, ui.review"
 
 ⚙️ Cài đặt & Sử dụng
 Clone dự án.
