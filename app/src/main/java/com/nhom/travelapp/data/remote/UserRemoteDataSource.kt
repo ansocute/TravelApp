@@ -29,4 +29,24 @@ class UserRemoteDataSource {
             .setValue(allowLocationAccess)
             .await()
     }
+
+    suspend fun updateUserDetails(uid: String, fullName: String, phone: String, aboutMe: String) {
+        val updates = mapOf<String, Any>(
+            "fullName" to fullName,
+            "phone" to phone,
+            "aboutMe" to aboutMe
+        )
+        FirebaseProvider.usersRef
+            .child(uid)
+            .updateChildren(updates)
+            .await()
+    }
+
+    suspend fun updateUserAvatar(uid: String, avatarUrl: String) {
+        FirebaseProvider.usersRef
+            .child(uid)
+            .child("avatarUrl")
+            .setValue(avatarUrl)
+            .await()
+    }
 }

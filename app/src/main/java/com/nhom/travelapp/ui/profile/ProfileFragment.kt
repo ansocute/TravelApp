@@ -3,12 +3,15 @@ package com.nhom.travelapp.ui.profile
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
+import com.nhom.travelapp.R
 import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.databinding.FragmentProfileBinding
 import com.nhom.travelapp.databinding.LayoutDialogResetPasswordBinding
@@ -42,6 +45,40 @@ class ProfileFragment : Fragment() {
             binding.tvUserEmail.text = email
         }
 
+        viewModel.userPhone.observe(viewLifecycleOwner) { phone ->
+            binding.tvUserPhone.text = phone
+        }
+
+        viewModel.userAboutMe.observe(viewLifecycleOwner) { aboutMe ->
+            binding.tvUserAboutMe.text = aboutMe
+        }
+
+        viewModel.userAvatar.observe(viewLifecycleOwner) { avatarUrl ->
+            if (!avatarUrl.isNullOrEmpty()) {
+                if (avatarUrl.startsWith("http")) {
+                    // 1. Nếu là tài khoản Google (link web)
+                    Glide.with(this)
+                        .load(avatarUrl)
+                        .placeholder(R.drawable.ic_profile)
+                        .into(binding.ivAvatar)
+                } else {
+                    // 2. Nếu là ảnh tự tải (chuỗi Base64)
+                    try {
+                        val imageByteArray = Base64.decode(avatarUrl, Base64.DEFAULT)
+                        Glide.with(this)
+                            .load(imageByteArray)
+                            .placeholder(R.drawable.ic_profile)
+                            .into(binding.ivAvatar)
+                    } catch (e: Exception) {
+                        binding.ivAvatar.setImageResource(R.drawable.ic_profile)
+                    }
+                }
+            } else {
+                // Nếu không có ảnh thì set ảnh mặc định
+                binding.ivAvatar.setImageResource(R.drawable.ic_profile)
+            }
+        }
+
         viewModel.passwordResetStatus.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Loading -> {
@@ -66,9 +103,12 @@ class ProfileFragment : Fragment() {
         binding.menuChangePassword.setOnClickListener {
             showResetPasswordDialog()
         }
+
+        binding.btnEditProfile.setOnClickListener {
+            startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+        }
     }
 
-    // Hiển thị hộp thoại xác nhận
     private fun showResetPasswordDialog() {
         val email = viewModel.userEmail.value ?: ""
 
