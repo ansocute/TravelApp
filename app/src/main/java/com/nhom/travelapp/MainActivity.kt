@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.nhom.travelapp.databinding.ActivityMainBinding
+import com.nhom.travelapp.ui.discovery.DiscoveryFragment
 import com.nhom.travelapp.ui.map.MapsFragment // Lưu ý: An sẽ cần chuyển MapsActivity thành MapsFragment
 // Import thêm các Fragment của các bạn khác khi xong:
 // import com.nhom.travelapp.ui.discovery.DiscoveryFragment
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_explore -> {
-                    // replaceFragment(DiscoveryFragment())
+                     replaceFragment(DiscoveryFragment())
                     true
                 }
                 R.id.nav_map -> {

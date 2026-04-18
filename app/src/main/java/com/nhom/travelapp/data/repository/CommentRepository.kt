@@ -12,7 +12,7 @@ class CommentRepository {
     fun getComments(placeId: String): LiveData<List<Comment>> {
         val commentsLiveData = MutableLiveData<List<Comment>>()
 
-        database.child("Comments").orderByChild("placeId").equalTo(placeId)
+        database.child("comments").orderByChild("placeId").equalTo(placeId)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val list = mutableListOf<Comment>()
@@ -33,7 +33,7 @@ class CommentRepository {
 
     // Đẩy bình luận mới lên Firebase
     fun postComment(comment: Comment, onComplete: (Boolean) -> Unit) {
-        val newCommentRef = database.child("Comments").push()
+        val newCommentRef = database.child("comments").push()
         newCommentRef.setValue(comment)
             .addOnSuccessListener { onComplete(true) }
             .addOnFailureListener { onComplete(false) }
