@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.nhom.travelapp.databinding.ActivityMainBinding
-import com.nhom.travelapp.ui.map.MapsFragment // Lưu ý: An sẽ cần chuyển MapsActivity thành MapsFragment
+import com.nhom.travelapp.ui.map.MapsFragment
 // Import thêm các Fragment của các bạn khác khi xong:
 // import com.nhom.travelapp.ui.discovery.DiscoveryFragment
 // import com.nhom.travelapp.ui.planner.PlannerFragment
-// import com.nhom.travelapp.ui.profile.ProfileFragment
+import com.nhom.travelapp.ui.profile.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
         // 1. Mặc định khi mở App sẽ hiện trang Explore (Discovery) của Đức/Tùng
         // Hiện tại mình tạm để hiện trang Map của An nhé
         replaceFragment(MapsFragment())
+
+        binding.bottomNavigation.selectedItemId = R.id.nav_explore
 
         // 2. Thiết lập sự kiện click cho Bottom Navigation
         setupNavigation()
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_profile -> {
-                    // replaceFragment(ProfileFragment())
+                    replaceFragment(ProfileFragment())
                     true
                 }
                 else -> false

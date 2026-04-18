@@ -146,8 +146,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMain() {
-        // Thay đổi MainActivity thành MapsActivity của An
-        val intent = Intent(this, MapsFragment::class.java)
+        val intent = Intent(this, MainActivity::class.java)
 
         // Cờ này giúp xóa sạch các Activity cũ (như Login) khỏi hàng chờ
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

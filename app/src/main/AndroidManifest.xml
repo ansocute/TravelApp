@@ -33,6 +33,7 @@
         <activity android:name=".ui.details.DetailActivity" android:exported="false" />
         <activity android:name=".ui.auth.login.LoginActivity" android:exported="false" />
         <activity android:name=".ui.auth.register.RegisterActivity" android:exported="false" />
+        <activity android:name=".ui.auth.forgotpassword.ForgotPasswordActivity" android:exported="false" />
 
     </application>
 </manifest>
