@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.nhom.travelapp.databinding.ActivityMainBinding
 import com.nhom.travelapp.ui.discovery.DiscoveryFragment
-import com.nhom.travelapp.ui.map.MapsFragment // Lưu ý: An sẽ cần chuyển MapsActivity thành MapsFragment
+import com.nhom.travelapp.ui.map.MapsFragment
+import com.nhom.travelapp.ui.planner.PlannerFragment
+// Lưu ý: An sẽ cần chuyển MapsActivity thành MapsFragment
 // Import thêm các Fragment của các bạn khác khi xong:
 // import com.nhom.travelapp.ui.discovery.DiscoveryFragment
 // import com.nhom.travelapp.ui.planner.PlannerFragment
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_planner -> {
-                    // replaceFragment(PlannerFragment())
+                    replaceFragment(PlannerFragment())
                     true
                 }
                 R.id.nav_profile -> {
