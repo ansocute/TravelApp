@@ -13,11 +13,53 @@ import com.nhom.travelapp.MainActivity
 import com.nhom.travelapp.databinding.ActivityRegisterBinding
 import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.ui.auth.login.LoginActivity
+import android.Manifest
+import androidx.activity.result.contract.ActivityResultContracts
+import com.nhom.travelapp.core.extensions.showFirebaseErrorToast
+import android.app.Activity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.nhom.travelapp.R
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
     private val viewModel: RegisterViewModel by viewModels()
+
+    private lateinit var googleSignInClient: GoogleSignInClient
+
+    private val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isFineLocationGranted = permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false)
+        val isCoarseLocationGranted = permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
+
+        if (isFineLocationGranted || isCoarseLocationGranted) {
+            Toast.makeText(this, "Đã cấp quyền chia sẻ vị trí", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Bạn đã từ chối cấp quyền vị trí", Toast.LENGTH_SHORT).show()
+            binding.switchLocationAccess.isChecked = false
+        }
+    }
+
+    private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.idToken?.let { idToken ->
+                    viewModel.loginWithGoogle(idToken)
+                }
+            } catch (e: ApiException) {
+                setLoading(false)
+                Toast.makeText(this, "Lỗi kết nối Google: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            setLoading(false)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +69,7 @@ class RegisterActivity : AppCompatActivity() {
         applyBackgroundBlur()
         setupViews()
         observeViewModel()
+        setupGoogleSignIn()
     }
 
     private fun applyBackgroundBlur() {
@@ -64,17 +107,24 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.btnGoogleLater.setOnClickListener {
-            Toast.makeText(this, "Đăng ký bằng Google sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+            setLoading(true)
+            val signInIntent = googleSignInClient.signInIntent
+            googleSignInLauncher.launch(signInIntent)
         }
 
 
-        binding.switchLocationAccess.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                Toast.makeText(
-                    this,
-                    "Tùy chọn vị trí đã bật. Phần xin quyền sẽ tích hợp sau.",
-                    Toast.LENGTH_SHORT
-                ).show()
+        binding.switchLocationAccess.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed) {
+                if (isChecked) {
+                    locationPermissionRequest.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                    )
+                } else {
+                    Toast.makeText(this, "Đã tắt chia sẻ vị trí", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -98,11 +148,19 @@ class RegisterActivity : AppCompatActivity() {
 
                 is Resource.Error -> {
                     setLoading(false)
-                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    showFirebaseErrorToast(state.message)
                     viewModel.resetState()
                 }
             }
         }
+    }
+
+    private fun setupGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
     private fun setLoading(isLoading: Boolean) {
