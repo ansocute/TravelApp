@@ -16,11 +16,19 @@ import com.nhom.travelapp.ui.auth.login.LoginActivity
 import android.Manifest
 import androidx.activity.result.contract.ActivityResultContracts
 import com.nhom.travelapp.core.extensions.showFirebaseErrorToast
+import android.app.Activity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.nhom.travelapp.R
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
     private val viewModel: RegisterViewModel by viewModels()
+
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -36,6 +44,23 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.idToken?.let { idToken ->
+                    viewModel.loginWithGoogle(idToken)
+                }
+            } catch (e: ApiException) {
+                setLoading(false)
+                Toast.makeText(this, "Lỗi kết nối Google: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            setLoading(false)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -44,6 +69,7 @@ class RegisterActivity : AppCompatActivity() {
         applyBackgroundBlur()
         setupViews()
         observeViewModel()
+        setupGoogleSignIn()
     }
 
     private fun applyBackgroundBlur() {
@@ -81,7 +107,9 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.btnGoogleLater.setOnClickListener {
-            Toast.makeText(this, "Đăng ký bằng Google sẽ tích hợp sau", Toast.LENGTH_SHORT).show()
+            setLoading(true)
+            val signInIntent = googleSignInClient.signInIntent
+            googleSignInLauncher.launch(signInIntent)
         }
 
 
@@ -125,6 +153,14 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun setupGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
     private fun setLoading(isLoading: Boolean) {

@@ -47,6 +47,13 @@ class RegisterViewModel(
         }
     }
 
+    fun loginWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _registerState.value = Resource.Loading
+            _registerState.value = authRepository.loginWithGoogle(idToken)
+        }
+    }
+
     fun resetState() {
         _registerState.value = Resource.Idle
     }
