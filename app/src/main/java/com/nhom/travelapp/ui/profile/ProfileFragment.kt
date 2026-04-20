@@ -18,6 +18,7 @@ import com.nhom.travelapp.databinding.LayoutDialogResetPasswordBinding
 import com.nhom.travelapp.ui.auth.login.LoginActivity
 import android.Manifest
 import androidx.activity.result.contract.ActivityResultContracts
+import com.nhom.travelapp.core.extensions.showFirebaseErrorToast
 
 class ProfileFragment : Fragment() {
 
@@ -112,7 +113,7 @@ class ProfileFragment : Fragment() {
                     Toast.makeText(requireContext(), resource.data, Toast.LENGTH_LONG).show()
                 }
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(), resource.message, Toast.LENGTH_LONG).show()
+                    requireContext().showFirebaseErrorToast(resource.message)
                 }
                 else -> {}
             }

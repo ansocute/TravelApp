@@ -13,11 +13,28 @@ import com.nhom.travelapp.MainActivity
 import com.nhom.travelapp.databinding.ActivityRegisterBinding
 import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.ui.auth.login.LoginActivity
+import android.Manifest
+import androidx.activity.result.contract.ActivityResultContracts
+import com.nhom.travelapp.core.extensions.showFirebaseErrorToast
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
     private val viewModel: RegisterViewModel by viewModels()
+
+    private val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isFineLocationGranted = permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false)
+        val isCoarseLocationGranted = permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
+
+        if (isFineLocationGranted || isCoarseLocationGranted) {
+            Toast.makeText(this, "Đã cấp quyền chia sẻ vị trí", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Bạn đã từ chối cấp quyền vị trí", Toast.LENGTH_SHORT).show()
+            binding.switchLocationAccess.isChecked = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,13 +85,18 @@ class RegisterActivity : AppCompatActivity() {
         }
 
 
-        binding.switchLocationAccess.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                Toast.makeText(
-                    this,
-                    "Tùy chọn vị trí đã bật. Phần xin quyền sẽ tích hợp sau.",
-                    Toast.LENGTH_SHORT
-                ).show()
+        binding.switchLocationAccess.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed) {
+                if (isChecked) {
+                    locationPermissionRequest.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                    )
+                } else {
+                    Toast.makeText(this, "Đã tắt chia sẻ vị trí", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -98,7 +120,7 @@ class RegisterActivity : AppCompatActivity() {
 
                 is Resource.Error -> {
                     setLoading(false)
-                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    showFirebaseErrorToast(state.message)
                     viewModel.resetState()
                 }
             }

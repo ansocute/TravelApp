@@ -16,6 +16,7 @@ import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.databinding.ActivityEditProfileBinding
 import java.io.ByteArrayOutputStream
 import androidx.core.graphics.scale
+import com.nhom.travelapp.core.extensions.showFirebaseErrorToast
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -149,7 +150,7 @@ class EditProfileActivity : AppCompatActivity() {
                     binding.btnSave.text = "Lưu"
                     binding.btnSave.isEnabled = true
                     binding.btnDeactivate.isEnabled = true
-                    Toast.makeText(this, resource.message, Toast.LENGTH_LONG).show()
+                    showFirebaseErrorToast(resource.message)
                 }
                 else -> {}
             }
