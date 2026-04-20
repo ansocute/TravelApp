@@ -49,4 +49,11 @@ class UserRemoteDataSource {
             .setValue(avatarUrl)
             .await()
     }
+
+    suspend fun deleteUserProfile(uid: String) {
+        FirebaseProvider.usersRef
+            .child(uid)
+            .removeValue()
+            .await()
+    }
 }

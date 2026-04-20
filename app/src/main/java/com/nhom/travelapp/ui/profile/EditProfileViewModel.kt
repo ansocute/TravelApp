@@ -9,6 +9,7 @@ import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.data.model.User
 import com.nhom.travelapp.data.remote.UserRemoteDataSource
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class EditProfileViewModel(
     private val userRemoteDataSource: UserRemoteDataSource = UserRemoteDataSource()
@@ -75,6 +76,23 @@ class EditProfileViewModel(
                 _updateStatus.value = Resource.Success("Cập nhật ảnh đại diện thành công!")
             } catch (e: Exception) {
                 _updateStatus.value = Resource.Error("Lỗi khi lưu ảnh: ${e.message}")
+            }
+        }
+    }
+
+    fun deactivateAccount() {
+        val currentUser = FirebaseProvider.auth.currentUser ?: return
+        _updateStatus.value = Resource.Loading
+
+        viewModelScope.launch {
+            try {
+                userRemoteDataSource.deleteUserProfile(currentUser.uid)
+
+                currentUser.delete().await()
+
+                _updateStatus.value = Resource.Success("Tài khoản của bạn đã được xóa vĩnh viễn.")
+            } catch (e: Exception) {
+                _updateStatus.value = Resource.Error("Lỗi: ${e.localizedMessage}. Bạn có thể cần đăng nhập lại trước khi thực hiện thao tác này.")
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.nhom.travelapp.ui.profile
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -14,6 +15,7 @@ import com.nhom.travelapp.R
 import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.databinding.ActivityEditProfileBinding
 import java.io.ByteArrayOutputStream
+import androidx.core.graphics.scale
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -64,16 +66,36 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         binding.btnDeactivate.setOnClickListener {
-            Toast.makeText(this, "Tính năng đang được phát triển...", Toast.LENGTH_SHORT).show()
+            showDeactivateConfirmDialog()
         }
     }
 
     private fun observeViewModel() {
         viewModel.userData.observe(this) { user ->
-            binding.etFullName.setText(user.fullName)
+            if (user.fullName.isEmpty()) {
+                binding.etFullName.setText("")
+                binding.etFullName.hint = "Chưa cập nhật"
+            } else {
+                binding.etFullName.setText(user.fullName)
+            }
+
             binding.etEmail.setText(user.email)
-            binding.etPhone.setText(user.phone)
-            binding.etAboutMe.setText(user.aboutMe)
+
+            // Số điện thoại
+            if (user.phone.isEmpty()) {
+                binding.etPhone.setText("")
+                binding.etPhone.hint = "Chưa cập nhật"
+            } else {
+                binding.etPhone.setText(user.phone)
+            }
+
+            // Giới thiệu bản thân
+            if (user.aboutMe.isEmpty()) {
+                binding.etAboutMe.setText("")
+                binding.etAboutMe.hint = "Chưa cập nhật"
+            } else {
+                binding.etAboutMe.setText(user.aboutMe)
+            }
 
             if (user.avatarUrl.isNotEmpty()) {
                 if (user.avatarUrl.startsWith("http")) {
@@ -100,19 +122,33 @@ class EditProfileActivity : AppCompatActivity() {
                 is Resource.Loading -> {
                     binding.btnSave.text = "Đang xử lý..."
                     binding.btnSave.isEnabled = false
+                    binding.btnDeactivate.isEnabled = false
                 }
                 is Resource.Success -> {
                     binding.btnSave.text = "Lưu"
                     binding.btnSave.isEnabled = true
+                    binding.btnDeactivate.isEnabled = false
                     Toast.makeText(this, resource.data, Toast.LENGTH_SHORT).show()
 
-                    if (resource.data?.contains("Hồ sơ") == true) {
-                        finish()
+                    val successMessage = resource.data ?: ""
+                    Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show()
+
+                    when {
+                        successMessage.contains("xóa vĩnh viễn") -> {
+                            val intent = Intent(this, com.nhom.travelapp.ui.auth.login.LoginActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                        successMessage.contains("Hồ sơ") -> {
+                            finish()
+                        }
                     }
                 }
                 is Resource.Error -> {
                     binding.btnSave.text = "Lưu"
                     binding.btnSave.isEnabled = true
+                    binding.btnDeactivate.isEnabled = true
                     Toast.makeText(this, resource.message, Toast.LENGTH_LONG).show()
                 }
                 else -> {}
@@ -125,7 +161,7 @@ class EditProfileActivity : AppCompatActivity() {
             val inputStream = contentResolver.openInputStream(uri)
             val bitmap = BitmapFactory.decodeStream(inputStream)
 
-            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, true)
+            val resizedBitmap = bitmap.scale(300, 300)
 
             val outputStream = ByteArrayOutputStream()
             resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
@@ -135,5 +171,20 @@ class EditProfileActivity : AppCompatActivity() {
         } catch (e: Exception) {
             null
         }
+    }
+
+    private fun showDeactivateConfirmDialog() {
+        android.app.AlertDialog.Builder(this)
+            .setTitle("Xác nhận xóa tài khoản")
+            .setMessage("Mọi dữ liệu của bạn sẽ bị xóa vĩnh viễn và không thể khôi phục. Bạn có chắc chắn muốn tiếp tục không?")
+            .setPositiveButton("Xóa tài khoản") { _, _ ->
+                viewModel.deactivateAccount()
+            }
+            .setNegativeButton("Hủy", null)
+            .create()
+            .apply {
+                show()
+                getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(android.graphics.Color.RED)
+            }
     }
 }

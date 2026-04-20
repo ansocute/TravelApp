@@ -148,7 +148,6 @@ class LoginActivity : AppCompatActivity() {
     private fun goToMain() {
         val intent = Intent(this, MainActivity::class.java)
 
-        // Cờ này giúp xóa sạch các Activity cũ (như Login) khỏi hàng chờ
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
@@ -162,7 +161,6 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    // Bộ lắng nghe kết quả trả về từ màn hình chọn tài khoản Google
     private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
