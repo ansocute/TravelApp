@@ -33,7 +33,7 @@ class DetailActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.btnBack).setOnClickListener {
             finish()
         }
-        // 1. Nhận dữ liệu địa điểm từ Intent
+        // Nhận dữ liệu địa điểm từ Intent
         currentPlace = intent.getSerializableExtra("EXTRA_PLACE") as? Place
 
         if (currentPlace != null) {
@@ -61,7 +61,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    // 4. THÊM HÀM NÀY ĐỂ XỬ LÝ VIỆC HIỂN THỊ BAO NHIÊU BÌNH LUẬN
+    // xử lý hiển thị bình luận
     private fun updateCommentUI() {
         val tvSeeMore = findViewById<TextView>(R.id.tvSeeMoreComments)
 
@@ -88,7 +88,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setupUI(place: Place) {
         findViewById<TextView>(R.id.tvPlaceName).text = place.name
-        findViewById<TextView>(R.id.tvAddress).text = place.address
+        findViewById<TextView>(R.id.tvLocation).text = place.location
         findViewById<TextView>(R.id.tvDescription).text = place.description
 
         findViewById<TextView>(R.id.tvCategory).text = place.category

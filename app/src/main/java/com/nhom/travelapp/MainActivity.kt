@@ -7,9 +7,8 @@ import com.bumptech.glide.Glide
 import com.nhom.travelapp.core.firebase.FirebaseProvider
 import com.nhom.travelapp.databinding.ActivityMainBinding
 import com.nhom.travelapp.ui.map.MapsFragment
-// Import thêm các Fragment của các bạn khác khi xong:
-// import com.nhom.travelapp.ui.discovery.DiscoveryFragment
-// import com.nhom.travelapp.ui.planner.PlannerFragment
+import com.nhom.travelapp.ui.discovery.DiscoveryFragment
+import com.nhom.travelapp.ui.planner.PlannerFragment
 import com.nhom.travelapp.ui.profile.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
@@ -21,14 +20,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. Tải ảnh Avatar lên Top Bar
         setupTopBar()
 
-        // 2. Mặc định khi mở App sẽ hiện trang Explore
         replaceFragment(MapsFragment())
         binding.bottomNavigation.selectedItemId = R.id.nav_explore
 
-        // 3. Thiết lập sự kiện click cho Bottom Navigation
         setupNavigation()
     }
 
@@ -55,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_explore -> {
-                    // replaceFragment(DiscoveryFragment())
+                    replaceFragment(DiscoveryFragment())
                     true
                 }
                 R.id.nav_map -> {
@@ -63,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_planner -> {
-                    // replaceFragment(PlannerFragment())
+                    replaceFragment(PlannerFragment())
                     true
                 }
                 R.id.nav_profile -> {
