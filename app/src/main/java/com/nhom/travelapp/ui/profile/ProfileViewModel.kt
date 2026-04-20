@@ -1,5 +1,6 @@
 package com.nhom.travelapp.ui.profile
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,6 +34,9 @@ class ProfileViewModel(
     private val _passwordResetStatus = MutableLiveData<Resource<String>>()
     val passwordResetStatus: LiveData<Resource<String>> = _passwordResetStatus
 
+    private val _allowLocation = MutableLiveData<Boolean>()
+    val allowLocation: LiveData<Boolean> = _allowLocation
+
     init {
         loadUserProfile()
     }
@@ -43,7 +47,6 @@ class ProfileViewModel(
         if (currentUser != null) {
             _userEmail.value = currentUser.email ?: "Chưa có email"
 
-
             viewModelScope.launch {
                 try {
                     val userProfile = userRemoteDataSource.getUserProfile(currentUser.uid)
@@ -52,6 +55,7 @@ class ProfileViewModel(
                         _userAvatar.value = userProfile.avatarUrl
                         _userPhone.value = userProfile.phone.takeIf { it.isNotEmpty() } ?: "Chưa có số điện thoại"
                         _userAboutMe.value = userProfile.aboutMe.takeIf { it.isNotEmpty() } ?: "Hãy thêm vài dòng giới thiệu về bản thân bạn nhé!"
+                        _allowLocation.value = userProfile.allowLocationAccess
 
                     }
                 } catch (e: Exception) {
@@ -79,6 +83,19 @@ class ProfileViewModel(
                     _passwordResetStatus.value = Resource.Error(task.exception?.message ?: "Có lỗi xảy ra khi gửi email.")
                 }
             }
+    }
+
+    fun toggleLocationAccess(isAllowed: Boolean) {
+        val currentUser = FirebaseProvider.auth.currentUser ?: return
+        viewModelScope.launch {
+            try {
+                userRemoteDataSource.updateLocationAccess(currentUser.uid, isAllowed)
+                _allowLocation.value = isAllowed
+            } catch (e: Exception) {
+                Log.e("ProfileViewModel", "Lỗi cập nhật trạng thái vị trí: ${e.message}", e)
+                _allowLocation.value = !isAllowed
+            }
+        }
     }
 
     fun logout() {

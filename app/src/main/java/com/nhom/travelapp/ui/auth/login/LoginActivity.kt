@@ -26,6 +26,7 @@ import com.nhom.travelapp.ui.auth.register.RegisterActivity
 import com.nhom.travelapp.ui.details.DetailActivity
 import com.nhom.travelapp.ui.discovery.DiscoveryFragment
 import com.nhom.travelapp.ui.map.MapsFragment
+import com.nhom.travelapp.core.extensions.showFirebaseErrorToast
 
 class LoginActivity : AppCompatActivity() {
 
@@ -115,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
 
                 is Resource.Error -> {
                     setLoading(false)
-                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    showFirebaseErrorToast(state.message)
                     viewModel.resetState()
                 }
             }

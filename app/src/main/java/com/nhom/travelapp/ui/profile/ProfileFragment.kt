@@ -16,6 +16,8 @@ import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.databinding.FragmentProfileBinding
 import com.nhom.travelapp.databinding.LayoutDialogResetPasswordBinding
 import com.nhom.travelapp.ui.auth.login.LoginActivity
+import android.Manifest
+import androidx.activity.result.contract.ActivityResultContracts
 
 class ProfileFragment : Fragment() {
 
@@ -23,6 +25,24 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: ProfileViewModel by viewModels()
+
+    private val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isFineLocationGranted = permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false)
+        val isCoarseLocationGranted = permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
+
+        if (isFineLocationGranted || isCoarseLocationGranted) {
+            // Android cho phép -> Lưu lên Firebase là True
+            viewModel.toggleLocationAccess(true)
+            Toast.makeText(requireContext(), "Đã bật chia sẻ vị trí", Toast.LENGTH_SHORT).show()
+        } else {
+            // Android từ chối -> Đẩy công tắc về lại OFF và lưu False
+            Toast.makeText(requireContext(), "Bạn đã từ chối cấp quyền vị trí", Toast.LENGTH_SHORT).show()
+            binding.switchLocation.isChecked = false
+            viewModel.toggleLocationAccess(false)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -51,6 +71,10 @@ class ProfileFragment : Fragment() {
 
         viewModel.userAboutMe.observe(viewLifecycleOwner) { aboutMe ->
             binding.tvUserAboutMe.text = aboutMe
+        }
+
+        viewModel.allowLocation.observe(viewLifecycleOwner) { isAllowed ->
+            binding.switchLocation.isChecked = isAllowed
         }
 
         viewModel.userAvatar.observe(viewLifecycleOwner) { avatarUrl ->
@@ -106,6 +130,22 @@ class ProfileFragment : Fragment() {
 
         binding.btnEditProfile.setOnClickListener {
             startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+        }
+
+        binding.switchLocation.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed) {
+                if (isChecked) {
+                    locationPermissionRequest.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                    )
+                } else {
+                    viewModel.toggleLocationAccess(false)
+                    Toast.makeText(requireContext(), "Đã tắt chia sẻ vị trí", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
