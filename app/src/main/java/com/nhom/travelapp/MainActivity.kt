@@ -21,11 +21,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupTopBar()
-
-        replaceFragment(MapsFragment())
-        binding.bottomNavigation.selectedItemId = R.id.nav_explore
-
+        // Bước 1: Khởi tạo listener trước để sẵn sàng lắng nghe sự kiện nhấn menu
         setupNavigation()
+
+        // Bước 2: Thiết lập trạng thái mặc định khi mới mở App
+        if (savedInstanceState == null) {
+            // Dòng này sẽ kích hoạt R.id.nav_explore trong setupNavigation()
+            // giúp nạp DiscoveryFragment một cách tự động
+            binding.bottomNavigation.selectedItemId = R.id.nav_explore
+        }
     }
 
     private fun setupTopBar() {
@@ -49,6 +53,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
+            // Kiểm tra nếu nhấn lại đúng Tab đang hiển thị thì không cần nạp lại
+            if (item.itemId == binding.bottomNavigation.selectedItemId &&
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) != null) {
+                return@setOnItemSelectedListener true
+            }
+
             when (item.itemId) {
                 R.id.nav_explore -> {
                     replaceFragment(DiscoveryFragment())
@@ -72,9 +82,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
-        fragmentTransaction.commit()
+        supportFragmentManager.beginTransaction()
+            .setReorderingAllowed(true) // Giúp tối ưu hóa việc chuyển đổi Fragment
+            .replace(R.id.nav_host_fragment, fragment)
+            .commit()
     }
 }
