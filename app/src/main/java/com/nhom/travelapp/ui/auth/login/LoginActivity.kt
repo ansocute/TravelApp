@@ -26,6 +26,7 @@ import com.nhom.travelapp.ui.auth.register.RegisterActivity
 import com.nhom.travelapp.ui.details.DetailActivity
 import com.nhom.travelapp.ui.discovery.DiscoveryFragment
 import com.nhom.travelapp.ui.map.MapsFragment
+import com.nhom.travelapp.core.extensions.showFirebaseErrorToast
 
 class LoginActivity : AppCompatActivity() {
 
@@ -115,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
 
                 is Resource.Error -> {
                     setLoading(false)
-                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    showFirebaseErrorToast(state.message)
                     viewModel.resetState()
                 }
             }
@@ -146,10 +147,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMain() {
-        // Thay đổi MainActivity thành MapsActivity của An
-        val intent = Intent(this, MapsFragment::class.java)
+        val intent = Intent(this, MainActivity::class.java)
 
-        // Cờ này giúp xóa sạch các Activity cũ (như Login) khỏi hàng chờ
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
@@ -163,7 +162,6 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    // Bộ lắng nghe kết quả trả về từ màn hình chọn tài khoản Google
     private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)

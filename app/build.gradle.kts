@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     alias(libs.plugins.kotlin.android) // Dùng cho Maps API key / secrets
+    id("kotlin-kapt")
 }
 
 android {
@@ -57,6 +58,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage-ktx")
 
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
@@ -70,7 +72,11 @@ dependencies {
 
     // Thư viện hỗ trợ bo góc CardView nâng cao (nếu cần)
     implementation("androidx.cardview:cardview:1.0.0")
+    val room_version = "2.6.1"
 
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
