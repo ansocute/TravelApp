@@ -36,6 +36,17 @@
     <string name="action_send_reset_email">Gửi email đặt lại mật khẩu</string>
     <string name="action_back_to_login">Quay lại đăng nhập</string>
 
+    //Khám phá
+    <string name="title_discovery">Khám phá</string>
+    <string name="hint_search">Tìm kiếm địa điểm…</string>
+    <string name="category_all">Tất cả</string>
+    <string name="category_food">Ăn uống</string>
+    <string name="category_sights">Tham quan</string>
+    <string name="category_hotels">Khách sạn</string>
+
+    <string name="placeholder_place_name">Tên địa điểm</string>
+    <string name="placeholder_location">Địa chỉ, Thành phố</string>
+    <string name="label_rating_format">⭐ 5</string>
 
     <string name="place_rating">%1$f</string>
 </resources>

@@ -21,7 +21,7 @@
             android:layout_height="80dp"
             android:scaleType="centerCrop"
             android:src="@drawable/bg_login_travel"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize16"
             app:strokeColor="#EEE"
             app:strokeWidth="1dp" />
 
@@ -36,7 +36,7 @@
                 android:id="@+id/tvPlaceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tên địa điểm"
+                android:text="@string/placeholder_place_name"
                 android:textColor="#333"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Địa chỉ, Thành phố"
+                android:text="@string/placeholder_location"
                 android:textColor="#888"
                 android:textSize="14sp" />
 
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="⭐ 4.5"
+                android:text="@string/label_rating_format"
                 android:textColor="#FF9800"
                 android:textStyle="bold" />
         </LinearLayout>

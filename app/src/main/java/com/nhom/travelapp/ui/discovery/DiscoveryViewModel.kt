@@ -1,12 +1,11 @@
 package com.nhom.travelapp.ui.discovery
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.nhom.travelapp.core.utils.Resource
 import com.nhom.travelapp.data.model.Place
 import com.nhom.travelapp.data.repository.PlaceRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DiscoveryViewModel(
@@ -15,6 +14,8 @@ class DiscoveryViewModel(
 
     private val _placesState = MutableLiveData<Resource<List<Place>>>(Resource.Idle)
     val placesState: LiveData<Resource<List<Place>>> = _placesState
+
+    private var searchJob: Job? = null
 
     init {
         fetchPlaces()
@@ -28,13 +29,22 @@ class DiscoveryViewModel(
     }
 
     fun search(query: String) {
+        searchJob?.cancel()
         if (query.isEmpty()) {
             fetchPlaces()
             return
         }
-        viewModelScope.launch {
+        searchJob = viewModelScope.launch {
+            delay(500) // Debounce 0.5s để tránh lag Firebase
             _placesState.value = Resource.Loading
             _placesState.value = repository.searchPlaces(query)
+        }
+    }
+
+    fun filterByCategory(category: String) {
+        viewModelScope.launch {
+            _placesState.value = Resource.Loading
+            _placesState.value = repository.getPlacesByCategory(category)
         }
     }
 }

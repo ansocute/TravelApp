@@ -12,34 +12,32 @@ class PlaceRepository {
     suspend fun getAllPlaces(): Resource<List<Place>> {
         return try {
             val snapshot = database.get().await()
-            val places = mutableListOf<Place>()
-
-            for (child in snapshot.children) {
-                val place = child.getValue(Place::class.java)
-                if (place != null) {
-                    places.add(place)
-                }
-            }
+            val places = snapshot.children.mapNotNull { it.getValue(Place::class.java) }
             Resource.Success(places)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Lỗi kết nối Realtime Database")
+            // Sử dụng e.message để hết cảnh báo "unused parameter e"
+            Resource.Error(e.message ?: "Lỗi kết nối dữ liệu")
         }
     }
 
     suspend fun searchPlaces(query: String): Resource<List<Place>> {
         return try {
             val snapshot = database.get().await()
-            val places = mutableListOf<Place>()
-
-            for (child in snapshot.children) {
-                val place = child.getValue(Place::class.java)
-                if (place != null && place.name.contains(query, ignoreCase = true)) {
-                    places.add(place)
-                }
-            }
+            val places = snapshot.children.mapNotNull { it.getValue(Place::class.java) }
+                .filter { it.name.contains(query, ignoreCase = true) }
             Resource.Success(places)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Lỗi tìm kiếm")
+            Resource.Error(e.message ?: "Lỗi tìm kiếm địa điểm")
+        }
+    }
+
+    suspend fun getPlacesByCategory(category: String): Resource<List<Place>> {
+        return try {
+            val snapshot = database.orderByChild("category").equalTo(category).get().await()
+            val places = snapshot.children.mapNotNull { it.getValue(Place::class.java) }
+            Resource.Success(places)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Lỗi lọc theo danh mục")
         }
     }
 }

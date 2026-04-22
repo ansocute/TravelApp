@@ -1,11 +1,25 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
     <style name="Base.Theme.TravelApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#1580FF</item>
     </style>
 
     <style name="Theme.TravelApp" parent="Base.Theme.TravelApp" />
 
+    <style name="ShapeAppearanceOverlay.App.CornerSize16" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
     <style name="RoundedSquare">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="BottomNavTextAppearance">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">true</item>
+        <item name="fontFamily">sans-serif-medium</item>
     </style>
 </resources>

@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.nhom.travelapp.R
 import com.nhom.travelapp.data.model.Place
 import com.nhom.travelapp.databinding.ActivityItemPlaceBinding
 import com.nhom.travelapp.ui.details.DetailActivity
+import java.util.Locale // Thêm thư viện này để fix lỗi Locale
 
 class PlaceAdapter(private var places: List<Place>) :
     RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
@@ -26,7 +26,7 @@ class PlaceAdapter(private var places: List<Place>) :
         )
         return PlaceViewHolder(binding)
     }
-    // lấy thêm location và chuyển qua trang detail
+
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
         val place = places[position]
         val context = holder.itemView.context
@@ -34,8 +34,9 @@ class PlaceAdapter(private var places: List<Place>) :
         holder.binding.apply {
             tvPlaceName.text = place.name
             tvLocation.text = place.location
-            //  SỬA RATING: Làm tròn lấy 1 chữ số thập phân
-            tvRating.text = String.format("%.1f", place.rating)
+
+            // FIX LỖI LOCALE: Sử dụng Locale.US để đảm bảo dấu thập phân là dấu chấm (.)
+            tvRating.text = String.format(Locale.US, "%.1f", place.rating)
 
             Glide.with(ivPlace.context)
                 .load(place.imageUrl)
@@ -44,30 +45,30 @@ class PlaceAdapter(private var places: List<Place>) :
                 .error(android.R.drawable.stat_notify_error)
                 .into(ivPlace)
 
-             // mở trang DetailActivity
-             root.setOnClickListener {
-                 val intent = Intent(context, DetailActivity::class.java)
-                 intent.putExtra("EXTRA_PLACE", place)
-                 context.startActivity(intent)
-             }
+            // Mở trang DetailActivity
+            root.setOnClickListener {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("EXTRA_PLACE", place)
+                context.startActivity(intent)
+            }
         }
     }
 
     override fun getItemCount() = places.size
 
-    // Cap nhat danh sach dung DiffUtil de het canh bao vang
+    // Cập nhật danh sách dùng DiffUtil để tối ưu hiệu năng
     fun updateData(newPlaces: List<Place>) {
         val diffCallback = object : DiffUtil.Callback() {
             override fun getOldListSize() = places.size
             override fun getNewListSize() = newPlaces.size
 
             override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean {
-                // So sanh ID cua hai dia diem
+                // So sánh ID của hai địa điểm
                 return places[oldPos].id == newPlaces[newPos].id
             }
 
             override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean {
-                // So sanh toan bo noi dung
+                // So sánh toàn bộ nội dung object
                 return places[oldPos] == newPlaces[newPos]
             }
         }

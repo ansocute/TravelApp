@@ -15,11 +15,9 @@ import com.nhom.travelapp.ui.adapter.PlaceAdapter
 
 class DiscoveryFragment : Fragment() {
 
-    // 1. Khai báo Binding đúng tên file XML activity_fragment_discovery
     private var _binding: ActivityFragmentDiscoveryBinding? = null
     private val binding get() = _binding!!
 
-    // 2. Khai báo ViewModel và Adapter
     private val viewModel: DiscoveryViewModel by viewModels()
     private lateinit var placeAdapter: PlaceAdapter
 
@@ -28,7 +26,6 @@ class DiscoveryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Khởi tạo Binding
         _binding = ActivityFragmentDiscoveryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,14 +35,14 @@ class DiscoveryFragment : Fragment() {
 
         setupRecyclerView()
         setupSearch()
+        setupFilter()
         observeViewModel()
     }
 
     private fun setupRecyclerView() {
-        // Khởi tạo adapter với danh sách rỗng ban đầu
+        // Fix lỗi "Too many arguments": Khởi tạo adapter chỉ với danh sách rỗng
         placeAdapter = PlaceAdapter(emptyList())
 
-        // Gán LayoutManager và Adapter cho RecyclerView (ID là rvPlaces trong XML)
         binding.rvPlaces.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = placeAdapter
@@ -54,15 +51,24 @@ class DiscoveryFragment : Fragment() {
     }
 
     private fun setupSearch() {
-        // Lắng nghe sự thay đổi chữ trong ô tìm kiếm (ID là etSearch trong XML)
         binding.etSearch.addTextChangedListener { text ->
             val query = text.toString().trim()
             viewModel.search(query)
         }
     }
 
+    private fun setupFilter() {
+        // Fix lỗi "Unresolved reference": Gọi trực tiếp từ binding
+        // Đảm bảo ID trong XML là chipAll, chipFood, chipSights, chipHotels
+        binding.apply {
+            chipAll.setOnClickListener { viewModel.fetchPlaces() }
+            chipFood.setOnClickListener { viewModel.filterByCategory("Food") }
+            chipSights.setOnClickListener { viewModel.filterByCategory("Sights") }
+            chipHotels.setOnClickListener { viewModel.filterByCategory("Hotels") }
+        }
+    }
+
     private fun observeViewModel() {
-        // Quan sát dữ liệu từ ViewModel
         viewModel.placesState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is Resource.Loading -> {
@@ -70,7 +76,6 @@ class DiscoveryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    // Cập nhật danh sách mới vào Adapter
                     state.data?.let { listPlaces ->
                         placeAdapter.updateData(listPlaces)
                     }
@@ -88,7 +93,6 @@ class DiscoveryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Giải phóng binding để tránh rò rỉ bộ nhớ
         _binding = null
     }
 }
