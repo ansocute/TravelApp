@@ -3,6 +3,7 @@ package com.nhom.travelapp.ui.map
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +12,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -30,6 +30,8 @@ import com.nhom.travelapp.R
 import com.nhom.travelapp.databinding.FragmentMapsBinding
 import com.nhom.travelapp.services.LocationService
 import java.util.Locale
+import android.graphics.BitmapFactory
+import com.google.android.gms.maps.model.BitmapDescriptor
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -149,52 +151,43 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // 1. Cấu hình giao diện bản đồ cơ bản
+        // 1. Cấu hình giao diện bản đồ
         mMap.uiSettings.apply {
-            isZoomControlsEnabled = false // Tắt nút zoom mặc định vì bạn đã có FAB riêng
+            isZoomControlsEnabled = false
             isMyLocationButtonEnabled = true
             isCompassEnabled = true
         }
-
-        // 2. Thêm Padding để logo Google không bị che bởi thanh SearchCard và Bottom Navigation
-        // Top padding khoảng 250-300px tùy độ cao SearchBar của bạn
         mMap.setPadding(0, 280, 0, 0)
 
-        // 3. Đưa Camera về vị trí mặc định ngay lập tức (TP.HCM)
-        // Việc này giúp bản đồ có nội dung hiển thị ngay cả khi chưa load xong Style hoặc Vị trí
-        val hcmc = LatLng(10.7769, 106.7009)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmc, 15f))
-
-        // 4. Thêm các địa điểm du lịch mẫu (Dinh Độc Lập, Nhà thờ Đức Bà...)
-        addTravelMarkers()
-
-        // 5. Cố gắng tải Map Style từ file JSON
-        // Đặt trong try-catch để nếu file style lỗi (gây màn hình nâu), app vẫn chạy bình thường
+        // 2. Tải Map Style (Để trong try-catch là rất đúng)
         try {
             val success = mMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
             )
-            if (!success) {
-                android.util.Log.e("MapsError", "Không thể phân giải file Map Style JSON.")
-            }
+            if (!success) android.util.Log.e("MapsError", "Style lỗi.")
         } catch (e: Exception) {
-            android.util.Log.e("MapsError", "Lỗi khi tải Style: ${e.message}")
+            e.printStackTrace()
         }
 
-        // 6. Kiểm tra quyền và lấy vị trí thực tế của người dùng
+        // 3. Thêm các Marker du lịch mẫu
+        addTravelMarkers()
+
+        // 4. QUAN TRỌNG: Logic di chuyển Camera
+        // Thay vì moveCamera cố định ở HCM tại đây, chúng ta sẽ gọi hàm lấy vị trí
         checkPermissionAndGetLocation()
 
-        // 7. Thiết lập các sự kiện tương tác trên bản đồ
+        // 5. Các sự kiện tương tác
+        setupMapInteractions()
+    }
+
+    private fun setupMapInteractions() {
         mMap.setOnMarkerClickListener { marker ->
-            // Nếu không phải marker vị trí hiện tại (chấm xanh), thì hiện Bottom Sheet
             if (marker.title != "Vị trí của bạn") {
                 displayLocationInfo(marker)
             }
-            false // Trả về false để sự kiện click mặc định của Google Maps vẫn chạy (hiện title)
+            false
         }
-
         mMap.setOnMapClickListener {
-            // Ẩn Bottom Sheet khi người dùng chạm ra ngoài bản đồ
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
@@ -216,19 +209,51 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             startActivity(intent)
         }
     }
+    // Tạo một class đơn giản để quản lý dữ liệu
+    // --- KHAI BÁO BIẾN Ở ĐẦU CLASS ---
+    private val iconCache = mutableMapOf<String, BitmapDescriptor>()
 
+    // --- DATA CLASS (Có thể để ngoài hoặc trong class) ---
+    data class TravelLocation(
+        val position: LatLng,
+        val title: String,
+        val type: String, // "park", "food", hoặc "default"
+        val snippet: String
+    )
+
+    // --- HÀM LẤY ICON (Bản tối ưu dùng Cache) ---
+    private fun getCustomIcon(type: String): BitmapDescriptor {
+        return iconCache.getOrPut(type) {
+            val drawableId = when (type) {
+                "park" -> R.drawable.ic_park
+                "food" -> R.drawable.ic_food
+                else -> R.drawable.ic_default
+            }
+            val bitmap = BitmapFactory.decodeResource(resources, drawableId)
+            // Resize 100x100 để marker không quá to che mất bản đồ
+            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false)
+            BitmapDescriptorFactory.fromBitmap(resizedBitmap)
+        }
+    }
+
+    // --- HÀM THÊM MARKER ---
     private fun addTravelMarkers() {
-        val locations = listOf(
-            LatLng(10.7769, 106.7009) to "Dinh Độc Lập",
-            LatLng(10.7798, 106.6990) to "Nhà thờ Đức Bà",
-            LatLng(10.7725, 106.6980) to "Chợ Bến Thành"
+        val travelList = listOf(
+            TravelLocation(LatLng(10.7769, 106.7009), "Dinh Độc Lập", "default", "Di tích lịch sử"),
+            TravelLocation(LatLng(10.7798, 106.6990), "Nhà thờ Đức Bà", "default", "Kiến trúc cổ"),
+            TravelLocation(LatLng(10.7884, 106.7048), "Thảo Cầm Viên", "park", "Công viên xanh"),
+            TravelLocation(LatLng(10.7725, 106.6980), "Chợ Bến Thành", "food", "Ẩm thực & Mua sắm"),
+            TravelLocation(LatLng(10.7825, 106.6990), "Hồ Con Rùa", "park", "Điểm check-in"),
+            TravelLocation(LatLng(10.7751, 106.7004), "Nhà hát Thành phố", "default", "Địa điểm văn hóa")
         )
-        for (loc in locations) {
+
+        for (place in travelList) {
             mMap.addMarker(MarkerOptions()
-                .position(loc.first)
-                .title(loc.second)
-                .snippet("Điểm tham quan nổi tiếng")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                .position(place.position)
+                .title(place.title)
+                .snippet(place.snippet)
+                .icon(getCustomIcon(place.type))
+            )
         }
     }
 
@@ -241,13 +266,22 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private fun getUserLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.isMyLocationEnabled = true
+
+            // Gọi Service lấy vị trí
+            locationService.getCurrentLocation(
+                onSuccess = { lat, lng ->
+                    // Nếu lấy được vị trí người dùng, bay camera về đó
+                    val userLocation = LatLng(lat, lng)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f))
+                },
+                onFailure = {
+                    // Nếu lỗi hoặc người dùng tắt GPS, lúc này mới dùng tọa độ dự phòng (HCM)
+                    val hcmc = LatLng(10.7769, 106.7009)
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmc, 15f))
+                    Toast.makeText(requireContext(), "Sử dụng vị trí mặc định", Toast.LENGTH_SHORT).show()
+                }
+            )
         }
-        locationService.getCurrentLocation(
-            onSuccess = { lat, lng ->
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 15f))
-            },
-            onFailure = { }
-        )
     }
 
     override fun onDestroyView() {
