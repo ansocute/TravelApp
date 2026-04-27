@@ -20,14 +20,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 1. Cài đặt thanh top bar (Avatar)
         setupTopBar()
-        // Bước 1: Khởi tạo listener trước để sẵn sàng lắng nghe sự kiện nhấn menu
+
+        // 2. Cấu hình điều hướng (Bottom Navigation)
         setupNavigation()
 
-        // Bước 2: Thiết lập trạng thái mặc định khi mới mở App
+        // 3. Thiết lập màn hình mặc định khi mở app
         if (savedInstanceState == null) {
-            // Dòng này sẽ kích hoạt R.id.nav_explore trong setupNavigation()
-            // giúp nạp DiscoveryFragment một cách tự động
+            // Tự động chọn tab Explore (nạp DiscoveryFragment)
             binding.bottomNavigation.selectedItemId = R.id.nav_explore
         }
     }
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            // Kiểm tra nếu nhấn lại đúng Tab đang hiển thị thì không cần nạp lại
+            // Tránh nạp lại Fragment nếu đang ở chính tab đó
             if (item.itemId == binding.bottomNavigation.selectedItemId &&
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment) != null) {
                 return@setOnItemSelectedListener true
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .setReorderingAllowed(true) // Giúp tối ưu hóa việc chuyển đổi Fragment
+            .setReorderingAllowed(true)
             .replace(R.id.nav_host_fragment, fragment)
             .commit()
     }
