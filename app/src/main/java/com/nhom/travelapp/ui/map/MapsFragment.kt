@@ -182,10 +182,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private fun setupMapInteractions() {
         mMap.setOnMarkerClickListener { marker ->
+            // Tránh xử lý nếu là marker vị trí hiện tại (chấm xanh)
             if (marker.title != "Vị trí của bạn") {
                 displayLocationInfo(marker)
             }
-            false
+            true // Trả về true để ẩn InfoWindow mặc định (khắc phục lỗi hiện 2 bảng)
         }
         mMap.setOnMapClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -193,21 +194,51 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun displayLocationInfo(marker: Marker) {
+        // 1. Lấy dữ liệu TravelLocation đã gắn vào tag
+        val place = marker.tag as? TravelLocation
+
+        // 2. Ánh xạ View từ layout Bottom Sheet
         val tvTitle = binding.root.findViewById<android.widget.TextView>(R.id.tvLocationName)
         val tvDistance = binding.root.findViewById<android.widget.TextView>(R.id.tvDistance)
-        val btnDirections = binding.root.findViewById<android.widget.Button>(R.id.btnGetDirections)
+        val imgLocation = binding.root.findViewById<android.widget.ImageView>(R.id.imgLocation)
 
+        // 3. Đổ text
         tvTitle?.text = marker.title
         tvDistance?.text = marker.snippet
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-        btnDirections?.setOnClickListener {
-            val uri = Uri.parse("google.navigation:q=${marker.position.latitude},${marker.position.longitude}")
-            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-                setPackage("com.google.android.apps.maps")
-            }
-            startActivity(intent)
+        // 4. QUAN TRỌNG: Load ảnh
+        if (place != null) {
+            com.bumptech.glide.Glide.with(this)
+                .load(place.imageResId) // Load trực tiếp từ ID resource
+                .placeholder(R.drawable.ic_launcher_background)
+                .centerCrop()
+                .into(imgLocation)
         }
+        // Xử lý nút chỉ đường
+        val btnDirections = binding.root.findViewById<android.widget.Button>(R.id.btnGetDirections)
+        btnDirections?.setOnClickListener {
+            if (place != null) {
+                // Tạo URI với tọa độ Lat/Lng của địa điểm
+                val uri = android.net.Uri.parse("google.navigation:q=${place.position.latitude},${place.position.longitude}")
+
+                // Tạo Intent để mở Google Maps
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri).apply {
+                    setPackage("com.google.android.apps.maps") // Chỉ định mở bằng app Google Maps
+                }
+
+                // Kiểm tra xem máy có cài Google Maps không trước khi mở
+                try {
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    // Nếu không có Google Maps, mở bằng trình duyệt hoặc báo lỗi
+                    Toast.makeText(requireContext(), "Không tìm thấy ứng dụng Google Maps", Toast.LENGTH_SHORT).show()
+                    val browserIntent = android.content.Intent(android.content.Intent.ACTION_VIEW,
+                        android.net.Uri.parse("https://www.google.com/maps/dir/?api=1&destination=${place.position.latitude},${place.position.longitude}"))
+                    startActivity(browserIntent)
+                }
+            }
+        }
+        bottomSheetBehavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
     }
     // Tạo một class đơn giản để quản lý dữ liệu
     // --- KHAI BÁO BIẾN Ở ĐẦU CLASS ---
@@ -217,8 +248,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     data class TravelLocation(
         val position: LatLng,
         val title: String,
-        val type: String, // "park", "food", hoặc "default"
-        val snippet: String
+        val type: String,
+        val snippet: String,
+        val imageResId: Int
     )
 
     // --- HÀM LẤY ICON (Bản tối ưu dùng Cache) ---
@@ -239,21 +271,22 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     // --- HÀM THÊM MARKER ---
     private fun addTravelMarkers() {
         val travelList = listOf(
-            TravelLocation(LatLng(10.7769, 106.7009), "Dinh Độc Lập", "default", "Di tích lịch sử"),
-            TravelLocation(LatLng(10.7798, 106.6990), "Nhà thờ Đức Bà", "default", "Kiến trúc cổ"),
-            TravelLocation(LatLng(10.7884, 106.7048), "Thảo Cầm Viên", "park", "Công viên xanh"),
-            TravelLocation(LatLng(10.7725, 106.6980), "Chợ Bến Thành", "food", "Ẩm thực & Mua sắm"),
-            TravelLocation(LatLng(10.7825, 106.6990), "Hồ Con Rùa", "park", "Điểm check-in"),
-            TravelLocation(LatLng(10.7751, 106.7004), "Nhà hát Thành phố", "default", "Địa điểm văn hóa")
+            TravelLocation(LatLng(10.7769, 106.7009), "Dinh Độc Lập", "default", "Di tích lịch sử", R.drawable.img_dinh_doc_lap),
+            TravelLocation(LatLng(10.7798, 106.6990), "Nhà thờ Đức Bà", "default", "Kiến trúc cổ", R.drawable.img_nha_tho_duc_ba),
+            TravelLocation(LatLng(10.7884, 106.7048), "Thảo Cầm Viên", "park", "Công viên xanh", R.drawable.img_thao_cam_vien),
+            TravelLocation(LatLng(10.7725, 106.6980), "Chợ Bến Thành", "food", "Ẩm thực & Mua sắm", R.drawable.img_cho_ben_thanh),
+            TravelLocation(LatLng(10.7825, 106.6990), "Hồ Con Rùa", "park", "Điểm check-in", R.drawable.img_ho_con_rua),
+            TravelLocation(LatLng(10.7751, 106.7004), "Nhà hát Thành phố", "default", "Địa điểm văn hóa", R.drawable.img_nha_hat_tp)
         )
 
         for (place in travelList) {
-            mMap.addMarker(MarkerOptions()
+            val marker = mMap.addMarker(MarkerOptions()
                 .position(place.position)
                 .title(place.title)
                 .snippet(place.snippet)
                 .icon(getCustomIcon(place.type))
             )
+            marker?.tag = place
         }
     }
 
