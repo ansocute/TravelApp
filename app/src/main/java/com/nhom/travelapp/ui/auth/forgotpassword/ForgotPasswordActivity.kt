@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.nhom.travelapp.databinding.ActivityForgotPasswordBinding
 import com.nhom.travelapp.core.utils.Resource
+import com.nhom.travelapp.core.extensions.showFirebaseErrorToast
 
 class ForgotPasswordActivity : AppCompatActivity() {
 
@@ -69,7 +70,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
                 is Resource.Error -> {
                     setLoading(false)
-                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    showFirebaseErrorToast(state.message)
                     viewModel.resetState()
                 }
             }
