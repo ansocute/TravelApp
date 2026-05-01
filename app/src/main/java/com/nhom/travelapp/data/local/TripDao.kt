@@ -16,4 +16,6 @@ interface TripDao {
     // (OPTIONAL - cộng điểm) Xóa tất cả
     @Query("DELETE FROM trips")
     suspend fun deleteAll()
+    @Delete
+    suspend fun delete(trip: Trip)
 }

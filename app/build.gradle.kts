@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
-    alias(libs.plugins.kotlin.android) // Dùng cho Maps API key / secrets
+    alias(libs.plugins.kotlin.android) // Dùng cho Maps API key / secret
     id("kotlin-kapt")
 }
 
@@ -71,7 +71,7 @@ dependencies {
 
     // Thư viện hỗ trợ bo góc CardView nâng cao (nếu cần)
     implementation("androidx.cardview:cardview:1.0.0")
-    val room_version = "2.6.1"
+    val room_version = "2.7.0"
 
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")

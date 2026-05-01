@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
+        android:padding="12dp"
         android:layout_marginBottom="10dp"/>
 
     <!-- Địa điểm -->
@@ -22,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
+        android:padding="12dp"
         android:layout_marginBottom="10dp"/>
 
     <!-- Số ngày -->
@@ -31,6 +33,17 @@
         android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"/>
+        android:minHeight="48dp"
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Link ảnh -->
+    <EditText
+        android:id="@+id/edtImage"
+        android:hint="Link ảnh (URL)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:padding="12dp"/>
 
 </LinearLayout>

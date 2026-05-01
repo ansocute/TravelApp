@@ -38,5 +38,14 @@
 
 
     <string name="place_rating">%1$f</string>
+
+    <string name="my_journeys">My Journeys</string>
+    <string name="desc_journeys">Your upcoming adventures and saved itineraries</string>
+    <string name="amalfi_escape">Amalfi Escape</string>
+    <string name="date_trip">Sept 14 - Sept 21</string>
+    <string name="day1">Day 1</string>
+    <string name="day2">Day 2</string>
+    <string name="other_itineraries">OTHER ITINERARIES</string>
+    <string name="southern_italy">Southern Italy Region</string>
 </resources>
 

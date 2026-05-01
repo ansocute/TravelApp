@@ -18,5 +18,7 @@ data class Trip(
     val location: String,
 
     // Ngày (Day 1, Day 2...)
-    val day: Int
+    val day: Int,
+
+    val image: String
 )
