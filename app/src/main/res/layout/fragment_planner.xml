@@ -1,25 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F8F6FB">
 
-    <!-- Danh sách lịch trình -->
-    <ListView
-        android:id="@+id/listView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"/>
+        android:fillViewport="true">
 
-    <!-- Nút thêm -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="22dp">
+
+            <!-- TITLE -->
+            <TextView
+                android:text="@string/my_journeys"
+                android:textStyle="bold"
+                android:textSize="34sp"
+                android:textColor="#202040"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text="Your upcoming adventures and saved itineraries"
+                android:textSize="16sp"
+                android:textColor="#777"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- HERO CARD -->
+            <androidx.cardview.widget.CardView
+                android:layout_marginTop="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                app:cardCornerRadius="28dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/travel1"
+                        android:contentDescription="Ảnh du lịch "/>
+
+                    <LinearLayout
+                        android:layout_gravity="bottom"
+                        android:padding="20dp"
+                        android:orientation="vertical"
+                        android:background="#66000000"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:text="Hồ Chí Minh City"
+                            android:textColor="#fff"
+                            android:textStyle="bold"
+                            android:textSize="30sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:text="30-04-2026"
+                            android:textColor="#ffffff"
+                            android:textSize="16sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- 🔥 RECYCLERVIEW (HIỂN THỊ DAY 1,2,3,4...) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:text="OTHER ITINERARIES"
+                android:textStyle="bold"
+                android:layout_marginTop="28dp"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
+        android:layout_margin="28dp"
         android:src="@android:drawable/ic_input_add"
-        android:contentDescription="Thêm lịch trình"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Thêm chuyến đi"
+        android:importantForAccessibility="yes"/>
 
 </RelativeLayout>
