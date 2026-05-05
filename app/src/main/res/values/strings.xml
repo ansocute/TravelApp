@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">TravelApp</string>
+    <string name="title_activity_maps">MapsActivity</string>
+
+    // Đăng nhập
+    <string name="content_desc_background">Background</string>
+    <string name="content_desc_logo">Logo</string>
+    <string name="app_title_travel_go">Travel Go</string>
+    <string name="login_welcome_back">Chào mừng trở lại</string>
+    <string name="login_subtitle_journey">Bắt đầu hành trình khám phá mới\ncủa bạn</string>
+    <string name="hint_email">Email của bạn</string>
+    <string name="hint_password">Mật khẩu</string>
+    <string name="action_remember_me">Ghi nhớ tôi</string>
+    <string name="action_forgot_password">Quên mật khẩu?</string>
+    <string name="action_login">Đăng nhập</string>
+    <string name="or_continue_with">HOẶC TIẾP TỤC VỚI</string>
+    <string name="action_google">Google</string>
+    <string name="prompt_new_user">Bạn mới sử dụng Travel Go?</string>
+    <string name="action_register">Đăng ký ngay</string>
+
+
+    //Đăng ký
+    <string name="register_title_journey">Bắt đầu hành trình</string>
+    <string name="register_subtitle_discover">Khám phá thế giới theo cách riêng\ncủa bạn</string>
+    <string name="hint_full_name">Họ và tên</string>
+    <string name="hint_confirm_password">Xác nhận</string>
+    <string name="content_desc_location">Location</string>
+    <string name="action_allow_location">Cho phép truy cập vị trí</string>
+    <string name="or_register_with">HOẶC ĐĂNG KÝ BẰNG</string>
+    <string name="prompt_existing_user">Bạn đã có tài khoản?</string>
+    <string name="footer_copyright">© 2026 TravelApp. All rights reserved.</string>
+
+    //Quên mật khẩu
+    <string name="forgot_password_title">Quên mật khẩu</string>
+    <string name="forgot_password_subtitle">Nhập email để nhận liên kết\nđặt lại mật khẩu</string>
+    <string name="action_send_reset_email">Gửi email đặt lại mật khẩu</string>
+    <string name="action_back_to_login">Quay lại đăng nhập</string>
+
+
+    <string name="place_rating">%1$f</string>
+
+    <string name="my_journeys">My Journeys</string>
+    <string name="desc_journeys">Your upcoming adventures and saved itineraries</string>
+    <string name="amalfi_escape">Amalfi Escape</string>
+    <string name="date_trip">Sept 14 - Sept 21</string>
+    <string name="day1">Day 1</string>
+    <string name="day2">Day 2</string>
+    <string name="other_itineraries">OTHER ITINERARIES</string>
+    <string name="southern_italy">Southern Italy Region</string>
+</resources>
+

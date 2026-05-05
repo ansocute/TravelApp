@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/content_desc_background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_login_travel"
+        tools:ignore="ContentDescription" />
+
+    <View
+        android:id="@+id/viewOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#CCFFFFFF"
+                app:cardCornerRadius="36dp"
+                app:cardElevation="10dp"
+                app:strokeColor="#22FFFFFF"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingStart="24dp"
+                    android:paddingTop="28dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="28dp">
+
+                    <FrameLayout
+                        android:layout_width="84dp"
+                        android:layout_height="84dp"
+                        android:background="@drawable/bg_logo_circle"
+                        android:foregroundGravity="center">
+
+                        <ImageView
+                            android:id="@+id/ivLogo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/content_desc_logo"
+                            android:src="@mipmap/ic_launcher_round"
+                            tools:ignore="ContentDescription" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:text="@string/register_title_journey"
+                        android:textAlignment="center"
+                        android:textColor="#1580FF"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvSubtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="24dp"
+                        android:gravity="center"
+                        android:text="@string/register_subtitle_discover"
+                        android:textColor="#8A8FA6"
+                        android:textSize="15sp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilFullName"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_full_name"
+                        app:boxBackgroundColor="#F5F2FF"
+                        app:boxCornerRadiusBottomEnd="28dp"
+                        app:boxCornerRadiusBottomStart="28dp"
+                        app:boxCornerRadiusTopEnd="28dp"
+                        app:boxCornerRadiusTopStart="28dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+                        app:startIconTint="#A1A8C3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etFullName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:paddingTop="18dp"
+                            android:paddingBottom="18dp"
+                            android:textColor="#344054"
+                            android:textColorHint="#A1A8C3" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilEmail"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/hint_email"
+                        app:boxBackgroundColor="#F5F2FF"
+                        app:boxCornerRadiusBottomEnd="28dp"
+                        app:boxCornerRadiusBottomStart="28dp"
+                        app:boxCornerRadiusTopEnd="28dp"
+                        app:boxCornerRadiusTopStart="28dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:startIconDrawable="@android:drawable/ic_dialog_email"
+                        app:startIconTint="#A1A8C3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:paddingTop="18dp"
+                            android:paddingBottom="18dp"
+                            android:textColor="#344054"
+                            android:textColorHint="#A1A8C3" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilPassword"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/hint_password"
+                        app:boxBackgroundColor="#F5F2FF"
+                        app:boxCornerRadiusBottomEnd="28dp"
+                        app:boxCornerRadiusBottomStart="28dp"
+                        app:boxCornerRadiusTopEnd="28dp"
+                        app:boxCornerRadiusTopStart="28dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:endIconMode="password_toggle"
+                        app:startIconDrawable="@android:drawable/ic_lock_lock"
+                        app:startIconTint="#A1A8C3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:paddingTop="18dp"
+                            android:paddingBottom="18dp"
+                            android:textColor="#344054"
+                            android:textColorHint="#A1A8C3" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilConfirmPassword"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/hint_confirm_password"
+                        app:boxBackgroundColor="#F5F2FF"
+                        app:boxCornerRadiusBottomEnd="28dp"
+                        app:boxCornerRadiusBottomStart="28dp"
+                        app:boxCornerRadiusTopEnd="28dp"
+                        app:boxCornerRadiusTopStart="28dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:endIconMode="password_toggle"
+                        app:startIconDrawable="@android:drawable/ic_lock_lock"
+                        app:startIconTint="#A1A8C3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etConfirmPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:paddingTop="18dp"
+                            android:paddingBottom="18dp"
+                            android:textColor="#344054"
+                            android:textColorHint="#A1A8C3" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutLocationAccess"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="#40F5F2FF"
+                        android:gravity="center_vertical"
+                        android:minHeight="58dp"
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@string/content_desc_location"
+                            android:src="@android:drawable/ic_menu_mylocation"
+                            app:tint="#1580FF"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="@string/action_allow_location"
+                            android:textColor="#3A3A52"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchLocationAccess"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRegister"
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:layout_marginTop="18dp"
+                        android:text="@string/action_register"
+                        android:textAllCaps="false"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="#2E8BFF"
+                        app:cornerRadius="29dp"
+                        app:elevation="4dp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
+                        android:text="@string/or_register_with"
+                        android:textColor="#98A2B3"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnGoogleLater"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="52dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/action_google"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textStyle="bold"
+                            app:backgroundTint="#4285F4"
+                            app:cornerRadius="26dp"
+                            app:strokeColor="#D9DCE8"
+                            app:strokeWidth="1dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/prompt_existing_user"
+                            android:textColor="#6B7280"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvGoToLogin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="@string/action_login"
+                            android:textColor="#1580FF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tvFooter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="@string/footer_copyright"
+                android:textColor="#B8C0D9"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
