@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    // DAO cũ
+    // Liên kết với DAO
     abstract fun tripDao(): TripDao
 
     // THÊM DAO mới
