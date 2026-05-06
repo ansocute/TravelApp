@@ -7,11 +7,8 @@ import com.nhom.travelapp.databinding.ActivityMainBinding
 import com.nhom.travelapp.ui.discovery.DiscoveryFragment
 import com.nhom.travelapp.ui.map.MapsFragment
 import com.nhom.travelapp.ui.planner.PlannerFragment
-// Lưu ý: An sẽ cần chuyển MapsActivity thành MapsFragment
-// Import thêm các Fragment của các bạn khác khi xong:
-// import com.nhom.travelapp.ui.discovery.DiscoveryFragment
-// import com.nhom.travelapp.ui.planner.PlannerFragment
-// import com.nhom.travelapp.ui.profile.ProfileFragment
+
+import com.nhom.travelapp.ui.profile.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,11 +19,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. Mặc định khi mở App sẽ hiện trang Explore (Discovery) của Đức/Tùng
-        // Hiện tại mình tạm để hiện trang Map của An nhé
-        replaceFragment(MapsFragment())
+        // Mặc định khi mở App sẽ hiện trang Explore (Discovery)
+        replaceFragment(DiscoveryFragment())
 
-        // 2. Thiết lập sự kiện click cho Bottom Navigation
         setupNavigation()
     }
 
@@ -34,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_explore -> {
-                     replaceFragment(DiscoveryFragment())
+                    replaceFragment(DiscoveryFragment())
                     true
                 }
                 R.id.nav_map -> {
@@ -46,7 +41,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_profile -> {
-                    // replaceFragment(ProfileFragment())
+                    // 2. ĐÃ MỞ KHÓA DÒNG NÀY ĐỂ CHẠY PROFILE
+                    replaceFragment(ProfileFragment())
                     true
                 }
                 else -> false
@@ -57,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
+        // Đảm bảo R.id.nav_host_fragment trùng khớp với ID trong activity_main.xml của bạn
         fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
         fragmentTransaction.commit()
     }

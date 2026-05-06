@@ -8,10 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nhom.travelapp.R
-import com.nhom.travelapp.data.local.Activity
 import com.nhom.travelapp.data.local.AppDatabase
+import com.nhom.travelapp.data.local.TripActivity
 import com.nhom.travelapp.databinding.ActivityDayDetailBinding
 import com.nhom.travelapp.ui.adapter.ActivityAdapter
 import kotlinx.coroutines.Dispatchers
@@ -24,52 +23,40 @@ class DayDetailActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
     private lateinit var adapter: ActivityAdapter
 
-    private val list = mutableListOf<Activity>()
+    private val list = mutableListOf<TripActivity>()
     private var tripId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityDayDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         tripId = intent.getIntExtra("tripId", -1)
-        val day = intent.getIntExtra("day", 1)
+        val dayNumber = intent.getIntExtra("day", 1)
+        binding.txtTitle.text = "Day $dayNumber"
 
-        binding.txtTitle.text = "Day " + day
-
-        adapter = ActivityAdapter(list) { activity ->
-
+        adapter = ActivityAdapter(list) { item ->
             lifecycleScope.launch(Dispatchers.IO) {
-                db.activityDao().delete(activity)
-
-                withContext(Dispatchers.Main) {
-                    loadData()
-                }
+                db.tripActivityDao().delete(item) // Đã sửa tên hàm
+                withContext(Dispatchers.Main) { loadData() }
             }
         }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        db = Room.databaseBuilder(
-            this,
-            AppDatabase::class.java,
-            "trip_db"
-        ).fallbackToDestructiveMigration(true).build()
+        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "trip_db")
+            .fallbackToDestructiveMigration() // Đã bỏ tham số lỗi
+            .build()
 
         loadData()
 
-        // 👉 NÚT +
-        binding.fabAddActivity.setOnClickListener {
-            showAddDialog()
-        }
+        binding.fabAddActivity.setOnClickListener { showAddDialog() }
     }
 
     private fun loadData() {
         lifecycleScope.launch(Dispatchers.IO) {
-
-            val data = db.activityDao().getByTripId(tripId)
-
+            val data = db.tripActivityDao().getByTripId(tripId)
             withContext(Dispatchers.Main) {
                 list.clear()
                 list.addAll(data)
@@ -78,12 +65,8 @@ class DayDetailActivity : AppCompatActivity() {
         }
     }
 
-    // 👉 DIALOG THÊM ACTIVITY
     private fun showAddDialog() {
-
-        val view = LayoutInflater.from(this)
-            .inflate(R.layout.dialog_add_activity, null)
-
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_add_activity, null)
         val edtTitle = view.findViewById<EditText>(R.id.edtTitle)
         val edtTime = view.findViewById<EditText>(R.id.edtTime)
         val edtLocation = view.findViewById<EditText>(R.id.edtLocation)
@@ -99,11 +82,10 @@ class DayDetailActivity : AppCompatActivity() {
         dialog.show()
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-
             val title = edtTitle.text.toString()
             val time = edtTime.text.toString()
             val location = edtLocation.text.toString()
-            val image = edtImage.text.toString()
+            val imageInput = edtImage.text.toString()
 
             if (title.isEmpty()) {
                 edtTitle.error = "Nhập tên"
@@ -111,17 +93,14 @@ class DayDetailActivity : AppCompatActivity() {
             }
 
             lifecycleScope.launch(Dispatchers.IO) {
-
-                db.activityDao().insert(
-                    Activity(
-                        tripId = tripId,
-                        title = title,
-                        time = time,
-                        location = location,
-                        image = if (image.isEmpty()) "https://picsum.photos/300" else image
-                    )
+                val newActivity = TripActivity(
+                    tripId = tripId,
+                    title = title,
+                    time = time,
+                    location = location,
+                    image = imageInput.ifEmpty { "https://picsum.photos/300" }
                 )
-
+                db.tripActivityDao().insert(newActivity)
                 withContext(Dispatchers.Main) {
                     loadData()
                     dialog.dismiss()

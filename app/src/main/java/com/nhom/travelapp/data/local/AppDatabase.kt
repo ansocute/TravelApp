@@ -1,19 +1,32 @@
 package com.nhom.travelapp.data.local
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 
-// THÊM Activity vào database + tăng version
-@Database(
-    entities = [Trip::class, Activity::class],
-    version = 2,
-    exportSchema = false
-)
+@Database(entities = [Trip::class, TripActivity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    // DAO cũ
     abstract fun tripDao(): TripDao
+    abstract fun tripActivityDao(): TripActivityDao
 
-    // THÊM DAO mới
-    abstract fun activityDao(): ActivityDao
+    companion object {
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
+
+        fun getDatabase(context: Context): AppDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    AppDatabase::class.java,
+                    "travel_database"
+                )
+                    .fallbackToDestructiveMigration() // Tự động xóa data cũ nếu đổi version để tránh lỗi
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 }

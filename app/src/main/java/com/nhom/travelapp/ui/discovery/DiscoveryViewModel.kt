@@ -10,41 +10,51 @@ import kotlinx.coroutines.launch
 
 class DiscoveryViewModel : ViewModel() {
 
-    private val repository = PlaceRepository()
+    // 1. Xóa dòng khởi tạo repository cũ (vì giờ dùng companion object)
+
     private val _placesState = MutableLiveData<Resource<List<Place>>>(Resource.Idle)
     val placesState: LiveData<Resource<List<Place>>> = _placesState
 
     private var searchJob: Job? = null
 
-    init { fetchPlaces() }
+    init {
+        fetchPlaces()
+    }
 
     fun fetchPlaces() {
         viewModelScope.launch {
             _placesState.value = Resource.Loading
-            _placesState.value = repository.getAllPlaces()
+            // 2. Gọi trực tiếp qua PlaceRepository
+            _placesState.value = PlaceRepository.getAllPlaces()
         }
     }
 
     fun search(query: String) {
         searchJob?.cancel()
-        if (query.isEmpty()) { fetchPlaces(); return }
+        if (query.isEmpty()) {
+            fetchPlaces()
+            return
+        }
         searchJob = viewModelScope.launch {
             delay(500)
             _placesState.value = Resource.Loading
-            _placesState.value = repository.searchPlaces(query)
+            // 3. Gọi trực tiếp qua PlaceRepository
+            _placesState.value = PlaceRepository.searchPlaces(query)
         }
     }
 
     fun filterByCategory(category: String) {
         viewModelScope.launch {
             _placesState.value = Resource.Loading
-            _placesState.value = repository.getPlacesByCategory(category)
+            // 4. Gọi trực tiếp qua PlaceRepository
+            _placesState.value = PlaceRepository.getPlacesByCategory(category)
         }
     }
 
     fun syncDataToFirebase() {
         viewModelScope.launch {
-            repository.pushDummyData()
+            // 5. Gọi trực tiếp qua PlaceRepository
+            PlaceRepository.pushDummyData()
             fetchPlaces()
         }
     }
