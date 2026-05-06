@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Tiêu đề -->
+    <EditText
+        android:id="@+id/edtTitle"
+        android:hint="Tiêu đề"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Địa điểm -->
+    <EditText
+        android:id="@+id/edtLocation"
+        android:hint="Địa điểm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Số ngày -->
+    <EditText
+        android:id="@+id/edtDay"
+        android:hint="Số ngày (1,2,3...)"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Link ảnh -->
+    <EditText
+        android:id="@+id/edtImage"
+        android:hint="Link ảnh (URL)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:padding="12dp"/>
+
+</LinearLayout>

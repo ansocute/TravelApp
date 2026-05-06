@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- ẢNH -->
+        <ImageView
+            android:id="@+id/imgTrip"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Trip Image"/>
+
+        <!-- LỚP TỐI ĐỂ CHỮ NỔI -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#55000000"/>
+
+        <!-- TEXT -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- DAY -->
+            <TextView
+                android:id="@+id/txtDay"
+                android:text="Day 1"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- TITLE -->
+            <TextView
+                android:id="@+id/txtTitle"
+                android:text="Tên chuyến đi"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- LOCATION -->
+            <TextView
+                android:id="@+id/txtLocation"
+                android:text="Địa điểm"
+                android:textColor="#DDFFFFFF"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>
